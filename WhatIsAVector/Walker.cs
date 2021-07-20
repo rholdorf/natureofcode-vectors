@@ -30,7 +30,7 @@ namespace WhatIsAVector
             _acceleration.SetMagnitude(1f);
 
             _velocity += _acceleration;
-            //_velocity.Clamp(2);
+
             _position += _velocity;
 
         }
