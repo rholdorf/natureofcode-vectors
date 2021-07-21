@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace WhatIsAVector
+namespace WhatIsAVector.Components
 {
     /// <summary>
     /// A game component that counts FPS and UPS, also gives other useful performance information.
@@ -36,14 +36,14 @@ namespace WhatIsAVector
             _color = color;
         }
 
-        /// <summary>
-        /// Allows the game component to perform any initialization it needs to before starting
-        /// to run.  This is where it can query for any required services and load content.
-        /// </summary>
-        public override void Initialize()
-        {
-            base.Initialize();
-        }
+        ///// <summary>
+        ///// Allows the game component to perform any initialization it needs to before starting
+        ///// to run.  This is where it can query for any required services and load content.
+        ///// </summary>
+        //public override void Initialize()
+        //{
+        //    base.Initialize();
+        //}
 
         /// <summary>
         /// Allows performace monitor to calculate update rate.

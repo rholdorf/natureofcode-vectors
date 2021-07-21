@@ -19,6 +19,7 @@
     <None Remove="Icon.ico" />
     <None Remove="Icon.bmp" />
     <None Remove="Content\Fonts\" />
+    <None Remove="Components\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icon.ico" />
@@ -41,5 +42,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\Fonts\" />
+    <Folder Include="Components\" />
   </ItemGroup>
 </Project>

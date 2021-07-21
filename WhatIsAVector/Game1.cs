@@ -3,6 +3,7 @@ using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using WhatIsAVector.Components;
 
 namespace WhatIsAVector
 {
@@ -11,21 +12,14 @@ namespace WhatIsAVector
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        private Random _random = new Random();
-
         private Matrix _translationMatrix;
 
         private const int WIDTH = 800;
         private const int HEIGHT = 600;
 
-        private Perlin _perlin = new Perlin();
-
-        private Vector2 _vector2;
-        private float _offset1;
-        private float _offset2 = 1000;
-
         private SpriteFont _hudFont;
         private FpsCounter _fpsCounter;
+        private MovingCircleNoise _movingCircleNoise;
 
         public Game1()
         {
@@ -38,7 +32,10 @@ namespace WhatIsAVector
         {
             _hudFont = Content.Load<SpriteFont>("Fonts/Hud");
             _fpsCounter = new FpsCounter(this, _hudFont, new Vector2(5, 5), Color.Yellow);
+            _movingCircleNoise = new MovingCircleNoise(this, Color.White, WIDTH, HEIGHT);
+
             Components.Add(_fpsCounter);
+            Components.Add(_movingCircleNoise);
 
             _graphics.PreferredBackBufferWidth = WIDTH;
             _graphics.PreferredBackBufferHeight = HEIGHT;
@@ -48,14 +45,8 @@ namespace WhatIsAVector
 
             _translationMatrix = Matrix.CreateTranslation(WIDTH / 2, HEIGHT / 2, 0f);
 
-            _vector2 = new Vector2(WIDTH / 2, HEIGHT / 2);
-
             base.Initialize();
         }
-
-
-
-
 
         protected override void LoadContent()
         {
@@ -68,24 +59,20 @@ namespace WhatIsAVector
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || keyboardState.IsKeyDown(Keys.Escape))
                 Exit();
 
-            _vector2.X = ((float)_perlin.Noise(_offset1)).Map(-1, 1, 0, WIDTH);
-            _vector2.Y = ((float)_perlin.Noise(_offset2)).Map(-1, 1, 0, HEIGHT);
-            _offset1 += 0.02f;
-            _offset2 += 0.02f;
 
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            //GraphicsDevice.Clear(Color.CornflowerBlue);
 
             //_spriteBatch.Begin(transformMatrix: _translationMatrix);
-            _spriteBatch.Begin();
+            //_spriteBatch.Begin();
 
-            _spriteBatch.DrawCircle(_vector2, 20, 20, Color.White);
+            //_spriteBatch.DrawCircle(_vector2, 20, 20, Color.White);
 
-            _spriteBatch.End();
+            //_spriteBatch.End();
 
             base.Draw(gameTime);
         }
