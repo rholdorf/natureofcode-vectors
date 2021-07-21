@@ -1,5 +1,6 @@
 ﻿using System;
-namespace WhatIsAVector
+
+namespace Noise
 {
     // code by https://github.com/formalatist/Perlin
     public abstract class Perlin<GradientType>
