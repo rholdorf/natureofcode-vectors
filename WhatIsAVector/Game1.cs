@@ -44,12 +44,13 @@ namespace WhatIsAVector
             _graphics.ApplyChanges();
             Primitives2D.Initialize(GraphicsDevice);
 
-            //Components.Add(new CreateTexture2DPerlinNoise(this, Color.White, WIDTH / 2, HEIGHT / 2, _perlin));
-            Components.Add(new MovingCircle1DPerlinNoise(this, Color.White, WIDTH, HEIGHT, _perlin, _random));
-            Components.Add(new RollingGraph1DPerlinNoise(this, Color.Red, WIDTH, HEIGHT, _perlin));
+            Components.Add(new CreateTexture2DPerlinNoise(this, Color.White, WIDTH / 2, HEIGHT / 2, _perlin));
+            //Components.Add(new MovingCircle1DPerlinNoise(this, Color.White, WIDTH, HEIGHT, _perlin, _random));
+            //Components.Add(new RollingGraph1DPerlinNoise(this, Color.Red, WIDTH, HEIGHT, _perlin));
+
+
+
             Components.Add(new FpsCounter(this, _hudFont, new Vector2(5, 5), Color.Yellow));
-
-
             _translationMatrix = Matrix.CreateTranslation(WIDTH / 2, HEIGHT / 2, 0f);
 
             base.Initialize();

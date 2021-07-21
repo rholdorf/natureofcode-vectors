@@ -13,6 +13,7 @@ namespace WhatIsAVector.Components
         private Perlin _perlin;
         private float _inc = 0.01f;
         private Texture2D _texture;
+        private float zoff = 0f;
 
         public CreateTexture2DPerlinNoise(
             Game game,
@@ -41,7 +42,7 @@ namespace WhatIsAVector.Components
                 var xoff = 0f;
                 for (int x = 0; x < _texture.Width; x++)
                 {
-                    var r = _perlin.NoiseByte(xoff, yoff);
+                    var r = _perlin.NoiseByte(xoff, yoff, zoff);
                     colorData[index++] = r; // red
                     colorData[index++] = r; // green
                     colorData[index++] = r; // blue
@@ -50,6 +51,8 @@ namespace WhatIsAVector.Components
                 }
                 yoff += _inc;
             }
+
+            zoff += _inc;
             _texture.SetData(colorData);
         }
 
