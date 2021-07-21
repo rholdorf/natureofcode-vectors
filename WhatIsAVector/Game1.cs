@@ -21,7 +21,8 @@ namespace WhatIsAVector
         private Perlin _perlin = new Perlin();
 
         private Vector2 _vector2;
-        private float _offset;
+        private float _offset1;
+        private float _offset2 = 1000;
 
         private SpriteFont _hudFont;
         private FpsCounter _fpsCounter;
@@ -67,12 +68,13 @@ namespace WhatIsAVector
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || keyboardState.IsKeyDown(Keys.Escape))
                 Exit();
 
-            _vector2.X += (float)_perlin.Noise(_offset);
-            _offset += 0.01f;
+            _vector2.X = ((float)_perlin.Noise(_offset1)).Map(-1, 1, 0, WIDTH);
+            _vector2.Y = ((float)_perlin.Noise(_offset2)).Map(-1, 1, 0, HEIGHT);
+            _offset1 += 0.02f;
+            _offset2 += 0.02f;
 
             base.Update(gameTime);
         }
-
 
         protected override void Draw(GameTime gameTime)
         {
@@ -82,8 +84,6 @@ namespace WhatIsAVector
             _spriteBatch.Begin();
 
             _spriteBatch.DrawCircle(_vector2, 20, 20, Color.White);
-
-
 
             _spriteBatch.End();
 
