@@ -10,7 +10,7 @@ namespace WhatIsAVector
 {
     public class Game1 : Game
     {
-        private GraphicsDeviceManager _graphics;
+        private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
         private Matrix _translationMatrix;
@@ -20,8 +20,12 @@ namespace WhatIsAVector
 
         private SpriteFont _hudFont;
 
-        private Perlin _perlin = new Perlin();
-        private Random _random = new Random();
+        private Perlin _perlin = new();
+        private Random _random = new();
+
+
+
+
 
         public Game1()
         {
@@ -34,18 +38,17 @@ namespace WhatIsAVector
         {
             _hudFont = Content.Load<SpriteFont>("Fonts/Hud");
 
-            Components.Add(new FpsCounter(this, _hudFont, new Vector2(5, 5), Color.Yellow));
-            Components.Add(new MovingCircleNoise(this, Color.White, WIDTH, HEIGHT, _perlin, _random));
-            Components.Add(new MovingCircleNoise(this, Color.White, WIDTH, HEIGHT, _perlin, _random));
-            Components.Add(new MovingCircleNoise(this, Color.White, WIDTH, HEIGHT, _perlin, _random));
-            Components.Add(new MovingCircleNoise(this, Color.White, WIDTH, HEIGHT, _perlin, _random));
-            //Components.Add(new RollingGraphNoise(this, Color.Red, WIDTH, HEIGHT, _perlin));
-
             _graphics.PreferredBackBufferWidth = WIDTH;
             _graphics.PreferredBackBufferHeight = HEIGHT;
             _graphics.IsFullScreen = false;
             _graphics.ApplyChanges();
             Primitives2D.Initialize(GraphicsDevice);
+
+            //Components.Add(new CreateTexture2DPerlinNoise(this, Color.White, WIDTH / 2, HEIGHT / 2, _perlin));
+            Components.Add(new MovingCircle1DPerlinNoise(this, Color.White, WIDTH, HEIGHT, _perlin, _random));
+            Components.Add(new RollingGraph1DPerlinNoise(this, Color.Red, WIDTH, HEIGHT, _perlin));
+            Components.Add(new FpsCounter(this, _hudFont, new Vector2(5, 5), Color.Yellow));
+
 
             _translationMatrix = Matrix.CreateTranslation(WIDTH / 2, HEIGHT / 2, 0f);
 
@@ -63,7 +66,6 @@ namespace WhatIsAVector
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || keyboardState.IsKeyDown(Keys.Escape))
                 Exit();
 
-
             base.Update(gameTime);
         }
 
@@ -73,7 +75,6 @@ namespace WhatIsAVector
 
             //_spriteBatch.Begin(transformMatrix: _translationMatrix);
             _spriteBatch.Begin();
-
 
 
 

@@ -5,12 +5,12 @@ namespace WhatIsAVector
     public abstract class Perlin<GradientType>
     {
 
-        /// <summary>
+        /// <summar>
         /// The function we use to smooth the interpolation between the
         /// different corners of the cube. With a linear interpolation we'll
         /// get hard edges.
         /// </summary>
-        private Func<double, double> SmoothingFunction;
+        private Func<float, float> SmoothingFunction;
 
         /// <summary>
         /// PermutationTable, shortened for readability
@@ -55,17 +55,35 @@ namespace WhatIsAVector
         /// <summary>
         /// Performs the dot product (inner product) of two 3D vectors where one of the vectors is stored in the GradientType type.
         /// </summary>
-        private Func<GradientType, double, double, double, double> Dot;
+        private Func<GradientType, float, float, float, float> Dot;
 
         protected Perlin(
             GradientType[] gradients,
-            Func<GradientType, double, double, double, double> dot,
-            Func<double, double> smoothingFunction)
+            Func<GradientType, float, float, float, float> dot,
+            Func<float, float> smoothingFunction)
         {
             this.gradients = gradients;
             this.Dot = dot;
             this.SmoothingFunction = smoothingFunction;
             PT = defaultPermutationTable;
+        }
+
+
+        /// <summary>
+        /// Standard Perlin Noise function, returns smooth noise in the range
+        /// (0x00,0xFF). Provide the x, y and z coordinate to sample the noise
+        /// function. y and z are optional parameters.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        /// <returns></returns>
+        public byte NoiseByte(float x, float y = 0.5f, float z = 0.5f)
+        {
+            // noise ranges from -1 to 1
+            // adding 1 to that will make the range from 0 to 2
+            // multiplying that by 128 will make the range from 0 to 255
+            return (byte)((Noise(x, y, z) + 1f) * 128f);
         }
 
         /// <summary>
@@ -77,7 +95,7 @@ namespace WhatIsAVector
         /// <param name="y"></param>
         /// <param name="z"></param>
         /// <returns></returns>
-        public double Noise(double x, double y = 0.5d, double z = 0.5d)
+        public float Noise(float x, float y = 0.5f, float z = 0.5f)
         {
             //determine what cube we are in
             int cubeX = ((int)x) & (PT.Length / 2 - 1);
@@ -110,35 +128,35 @@ namespace WhatIsAVector
             GradientType V111 = gradients[PT[PT[X1Index + 1] + cubeZ + 1] % gradients.Length];
 
             //calculate the local x, y and z coordinates (0..1)
-            x -= Math.Floor(x);
-            y -= Math.Floor(y);
-            z -= Math.Floor(z);
+            x -= (float)Math.Floor(x);
+            y -= (float)Math.Floor(y);
+            z -= (float)Math.Floor(z);
 
             //calculate dot products
-            double V000Dot = Dot(V000, x, y, z);
-            double V001Dot = Dot(V001, x, y, z - 1);
-            double V010Dot = Dot(V010, x, y - 1, z);
-            double V011Dot = Dot(V011, x, y - 1, z - 1);
-            double V100Dot = Dot(V100, x - 1, y, z);
-            double V101Dot = Dot(V101, x - 1, y, z - 1);
-            double V110Dot = Dot(V110, x - 1, y - 1, z);
-            double V111Dot = Dot(V111, x - 1, y - 1, z - 1);
+            float V000Dot = Dot(V000, x, y, z);
+            float V001Dot = Dot(V001, x, y, z - 1);
+            float V010Dot = Dot(V010, x, y - 1, z);
+            float V011Dot = Dot(V011, x, y - 1, z - 1);
+            float V100Dot = Dot(V100, x - 1, y, z);
+            float V101Dot = Dot(V101, x - 1, y, z - 1);
+            float V110Dot = Dot(V110, x - 1, y - 1, z);
+            float V111Dot = Dot(V111, x - 1, y - 1, z - 1);
 
             //calculate smoothed x, y and z values. These are used to get
             //a smoother interpolation between the dot products of the 
             //gradients and local coords
-            double smoothedX = SmoothingFunction(x);
-            double smoothedY = SmoothingFunction(y);
-            double smoothedZ = SmoothingFunction(z);
+            float smoothedX = SmoothingFunction(x);
+            float smoothedY = SmoothingFunction(y);
+            float smoothedZ = SmoothingFunction(z);
 
             //linearly interpolate the dot products
-            double V000V100Val = LinearlyInterpolate(V000Dot, V100Dot, smoothedX);
-            double V001V101Val = LinearlyInterpolate(V001Dot, V101Dot, smoothedX);
-            double V010V110Val = LinearlyInterpolate(V010Dot, V110Dot, smoothedX);
-            double V011V111Val = LinearlyInterpolate(V011Dot, V111Dot, smoothedX);
+            float V000V100Val = LinearlyInterpolate(V000Dot, V100Dot, smoothedX);
+            float V001V101Val = LinearlyInterpolate(V001Dot, V101Dot, smoothedX);
+            float V010V110Val = LinearlyInterpolate(V010Dot, V110Dot, smoothedX);
+            float V011V111Val = LinearlyInterpolate(V011Dot, V111Dot, smoothedX);
 
-            double ZZeroPlaneVal = LinearlyInterpolate(V000V100Val, V010V110Val, smoothedY);
-            double ZOnePlaneVal = LinearlyInterpolate(V001V101Val, V011V111Val, smoothedY);
+            float ZZeroPlaneVal = LinearlyInterpolate(V000V100Val, V010V110Val, smoothedY);
+            float ZOnePlaneVal = LinearlyInterpolate(V001V101Val, V011V111Val, smoothedY);
 
             return LinearlyInterpolate(ZZeroPlaneVal, ZOnePlaneVal, smoothedZ);
         }
@@ -153,7 +171,7 @@ namespace WhatIsAVector
         /// <param name="z"></param>
         /// <param name="tileRegion">Specifies the size of the region to "tile over", a larger value means it will take longer for the noise to repeat.</param>
         /// <returns></returns>
-        public double NoiseTiled(double x, double y = 0.5d, double z = 0.5d, int tileRegion = 2)
+        public float NoiseTiled(float x, float y = 0.5f, float z = 0.5f, int tileRegion = 2)
         {
             int cubeX = ((int)x) & (PT.Length / 2 - 1);
             int cubeY = ((int)y) & (PT.Length / 2 - 1);
@@ -170,26 +188,26 @@ namespace WhatIsAVector
             GradientType V101 = gradients[PT[PT[X1Index] + (cubeZ + 1) % tileRegion] % gradients.Length];
             GradientType V110 = gradients[PT[PT[X1Index1] + cubeZ % tileRegion] % gradients.Length];
             GradientType V111 = gradients[PT[PT[X1Index1] + (cubeZ + 1) % tileRegion] % gradients.Length];
-            x -= Math.Floor(x);
-            y -= Math.Floor(y);
-            z -= Math.Floor(z);
-            double V000Dot = Dot(V000, x, y, z);
-            double V001Dot = Dot(V001, x, y, z - 1);
-            double V010Dot = Dot(V010, x, y - 1, z);
-            double V011Dot = Dot(V011, x, y - 1, z - 1);
-            double V100Dot = Dot(V100, x - 1, y, z);
-            double V101Dot = Dot(V101, x - 1, y, z - 1);
-            double V110Dot = Dot(V110, x - 1, y - 1, z);
-            double V111Dot = Dot(V111, x - 1, y - 1, z - 1);
-            double smoothedX = SmoothingFunction(x);
-            double smoothedY = SmoothingFunction(y);
-            double smoothedZ = SmoothingFunction(z);
-            double V000V100Val = LinearlyInterpolate(V000Dot, V100Dot, smoothedX);
-            double V001V101Val = LinearlyInterpolate(V001Dot, V101Dot, smoothedX);
-            double V010V110Val = LinearlyInterpolate(V010Dot, V110Dot, smoothedX);
-            double V011V111Val = LinearlyInterpolate(V011Dot, V111Dot, smoothedX);
-            double ZZeroPlaneVal = LinearlyInterpolate(V000V100Val, V010V110Val, smoothedY);
-            double ZOnePlaneVal = LinearlyInterpolate(V001V101Val, V011V111Val, smoothedY);
+            x -= (float)Math.Floor(x);
+            y -= (float)Math.Floor(y);
+            z -= (float)Math.Floor(z);
+            float V000Dot = Dot(V000, x, y, z);
+            float V001Dot = Dot(V001, x, y, z - 1);
+            float V010Dot = Dot(V010, x, y - 1, z);
+            float V011Dot = Dot(V011, x, y - 1, z - 1);
+            float V100Dot = Dot(V100, x - 1, y, z);
+            float V101Dot = Dot(V101, x - 1, y, z - 1);
+            float V110Dot = Dot(V110, x - 1, y - 1, z);
+            float V111Dot = Dot(V111, x - 1, y - 1, z - 1);
+            float smoothedX = SmoothingFunction(x);
+            float smoothedY = SmoothingFunction(y);
+            float smoothedZ = SmoothingFunction(z);
+            float V000V100Val = LinearlyInterpolate(V000Dot, V100Dot, smoothedX);
+            float V001V101Val = LinearlyInterpolate(V001Dot, V101Dot, smoothedX);
+            float V010V110Val = LinearlyInterpolate(V010Dot, V110Dot, smoothedX);
+            float V011V111Val = LinearlyInterpolate(V011Dot, V111Dot, smoothedX);
+            float ZZeroPlaneVal = LinearlyInterpolate(V000V100Val, V010V110Val, smoothedY);
+            float ZOnePlaneVal = LinearlyInterpolate(V001V101Val, V011V111Val, smoothedY);
             return LinearlyInterpolate(ZZeroPlaneVal, ZOnePlaneVal, smoothedZ);
         }
 
@@ -207,18 +225,18 @@ namespace WhatIsAVector
         /// <param name="lacunarity">Specifies how quickly the frequency increases.</param>
         /// <param name="persistence">Specifies how quickly the amplitude of consecutive samples decreases</param>
         /// <returns></returns>
-        public double NoiseOctaves(
-            double x,
-            double y,
-            double z = 0.5d,
+        public float NoiseOctaves(
+            float x,
+            float y,
+            float z = 0.5f,
             int numOctaves = 6,
-            double lacunarity = 2d,
-            double persistence = 0.5d)
+            float lacunarity = 2f,
+            float persistence = 0.5f)
         {
-            double noiseValue = 0d;
-            double amp = 1d;
-            double freq = 1d;
-            double totalAmp = 0d;
+            float noiseValue = 0f;
+            float amp = 1f;
+            float freq = 1f;
+            float totalAmp = 0f;
 
             for (int i = 0; i < numOctaves; i++)
             {
@@ -244,19 +262,19 @@ namespace WhatIsAVector
         /// <param name="lacunarity"></param>
         /// <param name="persistence"></param>
         /// <returns></returns>
-        public double NoiseTiledOctaves(
-            double x,
-            double y,
-            double z,
+        public float NoiseTiledOctaves(
+            float x,
+            float y,
+            float z,
             int tileRegion = 2,
             int numOctaves = 6,
-            double lacunarity = 2d,
-            double persistence = 0.5d)
+            float lacunarity = 2f,
+            float persistence = 0.5f)
         {
-            double noiseValue = 0d;
-            double amp = 1d;
-            double freq = 1d;
-            double totalAmp = 0d;
+            float noiseValue = 0f;
+            float amp = 1f;
+            float freq = 1f;
+            float totalAmp = 0f;
 
             for (int i = 0; i < numOctaves; i++)
             {
@@ -284,7 +302,7 @@ namespace WhatIsAVector
             }
         }
 
-        private static double LinearlyInterpolate(double a, double b, double t)
+        private static float LinearlyInterpolate(float a, float b, float t)
         {
             return a + t * (b - a);
         }
@@ -294,11 +312,11 @@ namespace WhatIsAVector
         /// </summary>
         /// <param name="val"></param>
         /// <returns></returns>
-        protected static double SmoothToSCurve(double val)
+        protected static float SmoothToSCurve(float val)
         {
             //This is a recommended replacement for the original 3t^2 - 2t^3
             //from https://mrl.nyu.edu/~perlin/paper445.pdf
-            return val * val * val * (val * (val * 6d - 15d) + 10d);
+            return val * val * val * (val * (val * 6f - 15f) + 10f);
         }
     }
 
@@ -310,20 +328,20 @@ namespace WhatIsAVector
             new SimpleVector3(1,0,-1), new SimpleVector3(-1,0,-1), new SimpleVector3(0,1,1),
             new SimpleVector3(0,-1,1), new SimpleVector3(0,1,-1), new SimpleVector3(0,-1,-1)};
 
-        public Perlin(Func<double, double> smoothingFunction) : base(gradients, Dot, smoothingFunction) { }
+        public Perlin(Func<float, float> smoothingFunction) : base(gradients, Dot, smoothingFunction) { }
 
         public Perlin() : this(SmoothToSCurve) { }
 
-        private static double Dot(SimpleVector3 gradient, double x, double y, double z)
+        private static float Dot(SimpleVector3 gradient, float x, float y, float z)
         {
             return gradient.x * x + gradient.y * y + gradient.z * z;
         }
 
         public struct SimpleVector3
         {
-            public double x, y, z;
+            public float x, y, z;
 
-            public SimpleVector3(double x, double y, double z)
+            public SimpleVector3(float x, float y, float z)
             {
                 this.x = x;
                 this.y = y;
