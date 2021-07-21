@@ -24,7 +24,7 @@ namespace WhatIsAVector
         /// <param name="points">The points to connect with lines</param>
         /// <param name="color">The color to use</param>
         /// <param name="thickness">The thickness of the lines</param>
-        private static void DrawPoints(SpriteBatch spriteBatch, Vector2 position, List<Vector2> points, Color color, float thickness)
+        public static void DrawPoints(this SpriteBatch spriteBatch, Vector2 position, List<Vector2> points, Color color, float thickness)
         {
             if (points.Count < 2)
                 return;
@@ -34,7 +34,6 @@ namespace WhatIsAVector
                 DrawLine(spriteBatch, points[i - 1] + position, points[i] + position, color, thickness);
             }
         }
-
 
         /// <summary>
         /// Creates a list of vectors that represents a circle
@@ -107,6 +106,25 @@ namespace WhatIsAVector
 
             return points;
         }
+
+        ///// <summary>
+        ///// Draws a list of connecting points
+        ///// </summ
+        ///// <param name="spriteBatch">The destination drawing surface</param>
+        ///// /// <param name="position">Where to position the points</param>
+        ///// <param name="points">The points to connect with lines</param>
+        ///// <param name="color">The color to use</param>
+        ///// <param name="thickness">The thickness of the lines</param>
+        //public static void DrawPoints(this SpriteBatch spriteBatch, Vector2 position, List<Vector2> points, Color color, float thickness)
+        //{
+        //    if (points.Count < 2)
+        //        return;
+
+        //    for (int i = 1; i < points.Count; i++)
+        //    {
+        //        DrawLine(spriteBatch, points[i - 1] + position, points[i] + position, color, thickness);
+        //    }
+        //}
 
         /// <summary>
         /// Draws a filled rectangle

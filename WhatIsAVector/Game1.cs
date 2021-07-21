@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -18,8 +19,9 @@ namespace WhatIsAVector
         private const int HEIGHT = 600;
 
         private SpriteFont _hudFont;
-        private FpsCounter _fpsCounter;
-        private MovingCircleNoise _movingCircleNoise;
+
+        private Perlin _perlin = new Perlin();
+        private Random _random = new Random();
 
         public Game1()
         {
@@ -31,11 +33,13 @@ namespace WhatIsAVector
         protected override void Initialize()
         {
             _hudFont = Content.Load<SpriteFont>("Fonts/Hud");
-            _fpsCounter = new FpsCounter(this, _hudFont, new Vector2(5, 5), Color.Yellow);
-            _movingCircleNoise = new MovingCircleNoise(this, Color.White, WIDTH, HEIGHT);
 
-            Components.Add(_fpsCounter);
-            Components.Add(_movingCircleNoise);
+            Components.Add(new FpsCounter(this, _hudFont, new Vector2(5, 5), Color.Yellow));
+            Components.Add(new MovingCircleNoise(this, Color.White, WIDTH, HEIGHT, _perlin, _random));
+            Components.Add(new MovingCircleNoise(this, Color.White, WIDTH, HEIGHT, _perlin, _random));
+            Components.Add(new MovingCircleNoise(this, Color.White, WIDTH, HEIGHT, _perlin, _random));
+            Components.Add(new MovingCircleNoise(this, Color.White, WIDTH, HEIGHT, _perlin, _random));
+            //Components.Add(new RollingGraphNoise(this, Color.Red, WIDTH, HEIGHT, _perlin));
 
             _graphics.PreferredBackBufferWidth = WIDTH;
             _graphics.PreferredBackBufferHeight = HEIGHT;
@@ -65,14 +69,16 @@ namespace WhatIsAVector
 
         protected override void Draw(GameTime gameTime)
         {
-            //GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.CornflowerBlue);
 
             //_spriteBatch.Begin(transformMatrix: _translationMatrix);
-            //_spriteBatch.Begin();
+            _spriteBatch.Begin();
 
-            //_spriteBatch.DrawCircle(_vector2, 20, 20, Color.White);
 
-            //_spriteBatch.End();
+
+
+
+            _spriteBatch.End();
 
             base.Draw(gameTime);
         }
