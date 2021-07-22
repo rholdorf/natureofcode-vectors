@@ -3,9 +3,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Noise;
 
-namespace WhatIsAVector.Components
+namespace WhatIsAVector
 {
-    public class MovingCircle1DPerlinNoise : DrawableGameComponent
+    public class MovingCircle1DOpenSimplexNoise : DrawableGameComponent
     {
         private Vector2 _position;
         private Color _color;
@@ -15,14 +15,14 @@ namespace WhatIsAVector.Components
         private readonly Game _game;
         private float _offset1;
         private float _offset2;
-        private Perlin _noise;
+        private OpenSimplex2F _noise;
 
-        public MovingCircle1DPerlinNoise(
+        public MovingCircle1DOpenSimplexNoise(
             Game game,
             Color color,
             float screenWidth,
             float screenHeight,
-            Perlin noise,
+            OpenSimplex2F noise,
             Random random)
             : base(game)
         {
@@ -37,12 +37,17 @@ namespace WhatIsAVector.Components
             _offset2 = (float)random.NextDouble() * 1000;
         }
 
+        //public override void Initialize()
+        //{
+        //    base.Initialize();
+        //}
+
         public override void Update(GameTime gameTime)
         {
-            _position.X = (1 + _noise.Noise(_offset1)) * _screenWidth / 2;
-            _position.Y = (1 + _noise.Noise(_offset2)) * _screenHeight / 2;
-            _offset1 += 0.015f;
-            _offset2 += 0.015f;
+            _position.X = ((float)_noise.Noise2(_offset1, 0.5d)).Map(-1, 1, 0, _screenWidth);
+            _position.Y = ((float)_noise.Noise2(_offset2, 0.5d)).Map(-1, 1, 0, _screenHeight);
+            _offset1 += 0.005f;
+            _offset2 += 0.005f;
 
             base.Update(gameTime);
         }

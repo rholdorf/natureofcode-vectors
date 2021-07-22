@@ -6,7 +6,7 @@ using Noise;
 
 namespace WhatIsAVector.Components
 {
-    public class RollingGraph1DPerlinNoise : DrawableGameComponent
+    public class RollingGraph1DOpenSimplexNoise : DrawableGameComponent
     {
         private Vector2 _position;
         private Color _color;
@@ -14,17 +14,17 @@ namespace WhatIsAVector.Components
         private float _halfHeight;
         private readonly SpriteBatch _spriteBatch;
         private readonly Game _game;
-        private Perlin _noise;
+        private OpenSimplex2F _noise;
         private List<Vector2> _points = new List<Vector2>();
-        private float _inc = 0.01f;
+        private float _inc = 0.005f;
         private float _start = 0f;
 
-        public RollingGraph1DPerlinNoise(
+        public RollingGraph1DOpenSimplexNoise(
             Game game,
             Color color,
             float screenWidth,
             float screenHeight,
-            Perlin noise)
+            OpenSimplex2F noise)
             : base(game)
         {
             _screenWidth = screenWidth;
@@ -43,7 +43,7 @@ namespace WhatIsAVector.Components
 
             for (int x = 0; x < _screenWidth; x++)
             {
-                var y = (1 + (float)_noise.Noise(xoff, _inc)) * _halfHeight;
+                var y = (1 + (float)_noise.Noise2(xoff, _inc)) * _halfHeight;
                 _points.Add(new Vector2(x, y));
                 xoff += _inc;
             }

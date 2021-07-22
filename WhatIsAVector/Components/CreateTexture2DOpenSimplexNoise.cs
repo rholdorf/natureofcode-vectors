@@ -4,25 +4,26 @@ using Microsoft.Xna.Framework.Graphics;
 using Noise;
 
 namespace WhatIsAVector.Components
+
 {
-    public class CreateTexture2DPerlinNoise : DrawableGameComponent
+    public class CreateTexture2DOpenSimplexNoise : DrawableGameComponent
     {
         private Vector2 _position;
         private Color _color;
         private readonly SpriteBatch _spriteBatch;
         private readonly Game _game;
-        private Perlin _noise;
+        private OpenSimplex2F _noise;
         private float _inc = 0.01f;
         private Texture2D _texture;
         private float zoff = 0f;
 
-        public CreateTexture2DPerlinNoise(
+        public CreateTexture2DOpenSimplexNoise(
             Game game,
             Vector2 position,
             Color color,
             int width,
             int height,
-            Perlin noise)
+            OpenSimplex2F noise)
             : base(game)
         {
             _position = position;
@@ -44,7 +45,8 @@ namespace WhatIsAVector.Components
                 var xoff = 0f;
                 for (int x = 0; x < _texture.Width; x++)
                 {
-                    var r = _noise.NoiseByte(xoff, yoff, zoff);
+                    var noise = _noise.Noise3_XYBeforeZ(xoff, yoff, zoff);
+                    var r = (byte)((noise + 1f) * 128f);
                     colorData[index++] = r; // red
                     colorData[index++] = r; // green
                     colorData[index++] = r; // blue
