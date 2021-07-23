@@ -55,8 +55,21 @@ namespace WhatIsAVector
             //Components.Add(new MovingCircle1DPerlinNoise(this, Color.White, WIDTH, HEIGHT, _perlin, _random));
             //Components.Add(new MovingCircle1DOpenSimplexNoise(this, Color.Yellow, WIDTH, HEIGHT, _noise, _random));
 
-            Components.Add(new RollingGraph1DPerlinNoise(this, Color.Red, WIDTH, HEIGHT, _perlin));
-            Components.Add(new RollingGraph1DOpenSimplexNoise(this, Color.Yellow, WIDTH, HEIGHT, _noise));
+            //Components.Add(new RollingGraph1DPerlinNoise(this, Color.Red, WIDTH, HEIGHT, _perlin));
+            //Components.Add(new RollingGraph1DOpenSimplexNoise(this, Color.Yellow, WIDTH, HEIGHT, _noise));
+
+            int howMany = 100;
+            for (int i = 0; i < howMany; i++)
+            {
+                Components.Add(new BouncingBall(
+                    game: this,
+                    position: new Vector2((float)WIDTH / howMany * i, (float)HEIGHT / 2 - (_random.Next(0, howMany * 2))),
+                    color: Color.White,
+                    radius: 10f * (float)(Math.Pow(_random.NextDouble() + 1, 2)),
+                    mass: 2,
+                    screenWidth: WIDTH,
+                    screenHeight: HEIGHT));
+            }
 
             Components.Add(new FpsCounter(this, _hudFont, new Vector2(5, 5), Color.Yellow));
             _translationMatrix = Matrix.CreateTranslation(WIDTH / 2, HEIGHT / 2, 0f);
