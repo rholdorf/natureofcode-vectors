@@ -11,7 +11,7 @@ namespace Noise
         /// different corners of the cube. With a linear interpolation we'll
         /// get hard edges.
         /// </summary>
-        private Func<float, float> SmoothingFunction;
+        private readonly Func<float, float> SmoothingFunction;
 
         /// <summary>
         /// PermutationTable, shortened for readability
@@ -21,7 +21,7 @@ namespace Noise
         /// <summary>
         /// The defaultPermutationTable is 512 ints long and an contains values 0..255
         /// </summary>
-        private static int[] defaultPermutationTable = {
+        private static readonly int[] defaultPermutationTable = {
             151,160,137,91,90,15,131,13,201,95,96,53,194,233,7,225,140,36,103,
             30,69,142,8,99,37,240,21,10,23,190,6,148,247,120,234,75,0,26,197,
             62,94,252,219,203,117,35,11,32,57,177,33,88,237,149,56,87,174,20,
@@ -51,12 +51,12 @@ namespace Noise
             115,121,50,45,127,4,150,254,138,236,205,93,222,114,67,29,24,72,243,
             141,128,195,78,66,215,61,156,180};
 
-        private GradientType[] gradients;
+        private readonly GradientType[] gradients;
 
         /// <summary>
         /// Performs the dot product (inner product) of two 3D vectors where one of the vectors is stored in the GradientType type.
         /// </summary>
-        private Func<GradientType, float, float, float, float> Dot;
+        private readonly Func<GradientType, float, float, float, float> Dot;
 
         protected Perlin(
             GradientType[] gradients,
@@ -323,7 +323,7 @@ namespace Noise
 
     public class Perlin : Perlin<Perlin.SimpleVector3>
     {
-        private static SimpleVector3[] gradients = {
+        private static readonly SimpleVector3[] gradients = {
             new SimpleVector3(1,1,0), new SimpleVector3(-1,1,-0), new SimpleVector3(1,-1,0),
             new SimpleVector3(-1,-1,0), new SimpleVector3(1,0,1), new SimpleVector3(-1,0,1),
             new SimpleVector3(1,0,-1), new SimpleVector3(-1,0,-1), new SimpleVector3(0,1,1),

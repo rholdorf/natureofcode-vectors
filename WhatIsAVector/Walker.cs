@@ -11,7 +11,7 @@ namespace WhatIsAVector
         private Vector2 _velocity;
         private Vector2 _acceleration;
 
-        private Random _random;
+        private readonly Random _random;
 
 
         public Walker(float x, float y, Random random)

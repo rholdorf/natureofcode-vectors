@@ -25,7 +25,7 @@ namespace WhatIsAVector.Components
         private Vector2 _position;
         private static Process _process = Process.GetCurrentProcess();
         private Color _color;
-        private StringBuilder _outputSb = new();
+        private readonly StringBuilder _outputSb = new();
         private Color _shadow = new(0, 0, 0, 100);
 
         public FpsCounter(Game game, SpriteFont font, Vector2 pos, Color color)

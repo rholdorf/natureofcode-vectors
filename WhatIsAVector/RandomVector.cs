@@ -7,7 +7,7 @@ namespace WhatIsAVector
     public class RandomVector
     {
         private Vector2 _vector;
-        private Random _random;
+        private readonly Random _random;
 
         public RandomVector()
         {
@@ -15,7 +15,7 @@ namespace WhatIsAVector
             _vector = new Vector2();
         }
 
-        public void Update(GameTime gameTime)
+        public void Update()
         {
             _vector.X = _random.Next(-100, 101);
             _vector.Y = _random.Next(-100, 101);

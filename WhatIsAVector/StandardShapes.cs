@@ -11,11 +11,11 @@ namespace WhatIsAVector
         private const float MIN_LINE_THICKNESS = 1f;
         private const float MAX_LINE_THICKNESS = 10f;
 
-        private Game _game;
-        private BasicEffect _basicEffect;
+        private readonly Game _game;
+        private readonly BasicEffect _basicEffect;
 
-        private VertexPositionColor[] _vertices;
-        private int[] _indices;
+        private readonly VertexPositionColor[] _vertices;
+        private readonly int[] _indices;
 
         private int _vertexCount;
         private int _indexCount;

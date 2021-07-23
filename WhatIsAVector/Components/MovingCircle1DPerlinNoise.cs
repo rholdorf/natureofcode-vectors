@@ -10,13 +10,13 @@ namespace WhatIsAVector.Components
         private bool _disposed;
         private Vector2 _position;
         private Color _color;
-        private float _screenWidth;
-        private float _screenHeight;
+        private readonly float _screenWidth;
+        private readonly float _screenHeight;
         private SpriteBatch _spriteBatch;
         private readonly Game _game;
         private float _offset1;
         private float _offset2;
-        private Perlin _noise;
+        private readonly Perlin _noise;
 
         public MovingCircle1DPerlinNoise(
             Game game,

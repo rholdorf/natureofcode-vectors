@@ -21,10 +21,10 @@ namespace Noise
         private const int PSIZE = 2048;
         private const int PMASK = 2047;
 
-        private short[] perm;
-        private Grad2[] permGrad2;
-        private Grad3[] permGrad3;
-        private Grad4[] permGrad4;
+        private readonly short[] perm;
+        private readonly Grad2[] permGrad2;
+        private readonly Grad3[] permGrad3;
+        private readonly Grad4[] permGrad4;
 
         public OpenSimplex2F(long seed)
         {
@@ -63,7 +63,7 @@ namespace Noise
             double s = 0.366025403784439 * (x + y);
             double xs = x + s, ys = y + s;
 
-            return noise2_Base(xs, ys);
+            return Noise2_Base(xs, ys);
         }
 
         /**
@@ -78,19 +78,19 @@ namespace Noise
             double xx = x * 0.7071067811865476;
             double yy = y * 1.224744871380249;
 
-            return noise2_Base(yy + xx, yy - xx);
+            return Noise2_Base(yy + xx, yy - xx);
         }
 
         /**
          * 2D Simplex noise base.
          * Lookup table implementation inspired by DigitalShadow.
          */
-        private double noise2_Base(double xs, double ys)
+        private double Noise2_Base(double xs, double ys)
         {
             double value = 0;
 
             // Get base points and offsets
-            int xsb = fastFloor(xs), ysb = fastFloor(ys);
+            int xsb = FastFloor(xs), ysb = FastFloor(ys);
             double xsi = xs - xsb, ysi = ys - ysb;
 
             // Index to point list
@@ -134,7 +134,7 @@ namespace Noise
             double xr = r - x, yr = r - y, zr = r - z;
 
             // Evaluate both lattices to form a BCC lattice.
-            return noise3_BCC(xr, yr, zr);
+            return Noise3_BCC(xr, yr, zr);
         }
 
         /**
@@ -157,7 +157,7 @@ namespace Noise
             double zr = xy * 0.577350269189626 + zz;
 
             // Evaluate both lattices to form a BCC lattice.
-            return noise3_BCC(xr, yr, zr);
+            return Noise3_BCC(xr, yr, zr);
         }
 
         /**
@@ -180,7 +180,7 @@ namespace Noise
             double yr = xz * 0.577350269189626 + yy;
 
             // Evaluate both lattices to form a BCC lattice.
-            return noise3_BCC(xr, yr, zr);
+            return Noise3_BCC(xr, yr, zr);
         }
 
         /**
@@ -189,11 +189,11 @@ namespace Noise
          * It was actually faster to narrow down the points in the loop itself,
          * than to build up the index with enough info to isolate 4 points.
          */
-        private double noise3_BCC(double xr, double yr, double zr)
+        private double Noise3_BCC(double xr, double yr, double zr)
         {
 
             // Get base and offsets inside cube of first lattice.
-            int xrb = fastFloor(xr), yrb = fastFloor(yr), zrb = fastFloor(zr);
+            int xrb = FastFloor(xr), yrb = FastFloor(yr), zrb = FastFloor(zr);
             double xri = xr - xrb, yri = yr - yrb, zri = zr - zrb;
 
             // Identify which octant of the cube we're in. This determines which cell
@@ -236,7 +236,7 @@ namespace Noise
             double s = -0.138196601125011 * (x + y + z + w);
             double xs = x + s, ys = y + s, zs = z + s, ws = w + s;
 
-            return noise4_Base(xs, ys, zs, ws);
+            return Noise4_Base(xs, ys, zs, ws);
         }
 
         /**
@@ -251,7 +251,7 @@ namespace Noise
             double t2 = (z + w) * -0.403949762580207112 + (x + y) * -0.375199083010075342;
             double xs = x + s2, ys = y + s2, zs = z + t2, ws = w + t2;
 
-            return noise4_Base(xs, ys, zs, ws);
+            return Noise4_Base(xs, ys, zs, ws);
         }
 
         /**
@@ -265,7 +265,7 @@ namespace Noise
             double t2 = (y + w) * -0.403949762580207112 + (x + z) * -0.375199083010075342;
             double xs = x + s2, ys = y + t2, zs = z + s2, ws = w + t2;
 
-            return noise4_Base(xs, ys, zs, ws);
+            return Noise4_Base(xs, ys, zs, ws);
         }
 
         /**
@@ -281,7 +281,7 @@ namespace Noise
             double s2 = xyz * -0.16666666666666666 + ww;
             double xs = x + s2, ys = y + s2, zs = z + s2, ws = -0.5 * xyz + ww;
 
-            return noise4_Base(xs, ys, zs, ws);
+            return Noise4_Base(xs, ys, zs, ws);
         }
 
         /**
@@ -289,12 +289,12 @@ namespace Noise
          * Current implementation not fully optimized by lookup tables.
          * But still comes out slightly ahead of Gustavson's Simplex in tests.
          */
-        private double noise4_Base(double xs, double ys, double zs, double ws)
+        private double Noise4_Base(double xs, double ys, double zs, double ws)
         {
             double value = 0;
 
             // Get base points and offsets
-            int xsb = fastFloor(xs), ysb = fastFloor(ys), zsb = fastFloor(zs), wsb = fastFloor(ws);
+            int xsb = FastFloor(xs), ysb = FastFloor(ys), zsb = FastFloor(zs), wsb = FastFloor(ws);
             double xsi = xs - xsb, ysi = ys - ysb, zsi = zs - zsb, wsi = ws - wsb;
 
             // If we're in the lower half, flip so we can repeat the code for the upper half. We'll flip back later.
@@ -428,7 +428,7 @@ namespace Noise
          */
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static int fastFloor(double x)
+        private static int FastFloor(double x)
         {
             int xi = (int)x;
             return x < xi ? xi - 1 : xi;
@@ -438,16 +438,16 @@ namespace Noise
          * Lookup Tables & Gradients
          */
 
-        private static LatticePoint2D[] LOOKUP_2D;
-        private static LatticePoint3D[] LOOKUP_3D;
-        private static LatticePoint4D[] VERTICES_4D;
+        private static readonly LatticePoint2D[] LOOKUP_2D;
+        private static readonly LatticePoint3D[] LOOKUP_3D;
+        private static readonly LatticePoint4D[] VERTICES_4D;
 
         private const double N2 = 0.01001634121365712;
         private const double N3 = 0.030485933181293584;
         private const double N4 = 0.009202377986303158;
-        private static Grad2[] GRADIENTS_2D;
-        private static Grad3[] GRADIENTS_3D;
-        private static Grad4[] GRADIENTS_4D;
+        private static readonly Grad2[] GRADIENTS_2D;
+        private static readonly Grad3[] GRADIENTS_3D;
+        private static readonly Grad4[] GRADIENTS_4D;
 
         static OpenSimplex2F()
         {
@@ -467,18 +467,18 @@ namespace Noise
                 i2 = i1 ^ 1; j2 = j1 ^ 1; k2 = k1 ^ 1;
 
                 // The two points within this octant, one from each of the two cubic half-lattices.
-                LatticePoint3D c0 = new LatticePoint3D(i1, j1, k1, 0);
-                LatticePoint3D c1 = new LatticePoint3D(i1 + i2, j1 + j2, k1 + k2, 1);
+                LatticePoint3D c0 = new(i1, j1, k1, 0);
+                LatticePoint3D c1 = new(i1 + i2, j1 + j2, k1 + k2, 1);
 
                 // Each single step away on the first half-lattice.
-                LatticePoint3D c2 = new LatticePoint3D(i1 ^ 1, j1, k1, 0);
-                LatticePoint3D c3 = new LatticePoint3D(i1, j1 ^ 1, k1, 0);
-                LatticePoint3D c4 = new LatticePoint3D(i1, j1, k1 ^ 1, 0);
+                LatticePoint3D c2 = new(i1 ^ 1, j1, k1, 0);
+                LatticePoint3D c3 = new(i1, j1 ^ 1, k1, 0);
+                LatticePoint3D c4 = new(i1, j1, k1 ^ 1, 0);
 
                 // Each single step away on the second half-lattice.
-                LatticePoint3D c5 = new LatticePoint3D(i1 + (i2 ^ 1), j1 + j2, k1 + k2, 1);
-                LatticePoint3D c6 = new LatticePoint3D(i1 + i2, j1 + (j2 ^ 1), k1 + k2, 1);
-                LatticePoint3D c7 = new LatticePoint3D(i1 + i2, j1 + j2, k1 + (k2 ^ 1), 1);
+                LatticePoint3D c5 = new(i1 + (i2 ^ 1), j1 + j2, k1 + k2, 1);
+                LatticePoint3D c6 = new(i1 + i2, j1 + (j2 ^ 1), k1 + k2, 1);
+                LatticePoint3D c7 = new(i1 + i2, j1 + j2, k1 + (k2 ^ 1), 1);
 
                 // First two are guaranteed.
                 c0.NextOnFailure = c0.NextOnSuccess = c1;

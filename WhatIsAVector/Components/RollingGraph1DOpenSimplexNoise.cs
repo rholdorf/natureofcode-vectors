@@ -11,13 +11,13 @@ namespace WhatIsAVector.Components
         private bool _disposed;
         private Vector2 _position;
         private Color _color;
-        private float _screenWidth;
-        private float _halfHeight;
+        private readonly float _screenWidth;
+        private readonly float _halfHeight;
         private SpriteBatch _spriteBatch;
         private readonly Game _game;
-        private OpenSimplex2F _noise;
-        private List<Vector2> _points = new List<Vector2>();
-        private float _inc = 0.005f;
+        private readonly OpenSimplex2F _noise;
+        private readonly List<Vector2> _points = new();
+        private readonly float _inc = 0.005f;
         private float _start = 0f;
 
         public RollingGraph1DOpenSimplexNoise(

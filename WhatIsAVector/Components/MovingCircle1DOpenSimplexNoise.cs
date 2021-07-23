@@ -10,13 +10,13 @@ namespace WhatIsAVector
         private bool _disposed;
         private Vector2 _position;
         private Color _color;
-        private float _screenWidth;
-        private float _screenHeight;
+        private readonly float _screenWidth;
+        private readonly float _screenHeight;
         private SpriteBatch _spriteBatch;
         private readonly Game _game;
         private float _offset1;
         private float _offset2;
-        private OpenSimplex2F _noise;
+        private readonly OpenSimplex2F _noise;
 
         public MovingCircle1DOpenSimplexNoise(
             Game game,

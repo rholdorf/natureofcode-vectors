@@ -7,15 +7,14 @@ namespace WhatIsAVector
     public class ScreenBuffer : IDisposable
     {
         private bool _disposed;
-        private GraphicsDevice _graphicsDevice;
-        private SpriteBatch _spriteBatch;
+        private readonly Game _game;
         private RenderTarget2D _renderTarget;
-        private int _width;
-        private int _height;
+        private readonly int _width;
+        private readonly int _height;
 
         public ScreenBuffer(Game game, int width, int height)
         {
-            _graphicsDevice = game.GraphicsDevice;
+            _game = game;
             _width = width;
             _height = height;
         }
@@ -27,19 +26,19 @@ namespace WhatIsAVector
 
             _renderTarget?.Dispose();
             _renderTarget = null;
-            _disposed = true;
+             _disposed = true;
         }
 
         public void Initialize()
         {
             _renderTarget = new RenderTarget2D(
-                _graphicsDevice,
+                _game.GraphicsDevice,
                 _width,
                 _height,
                 false,
                 SurfaceFormat.Color,
                 DepthFormat.None,
-                _graphicsDevice.PresentationParameters.MultiSampleCount,
+                _game.GraphicsDevice.PresentationParameters.MultiSampleCount,
                 RenderTargetUsage.DiscardContents);
         }
     }

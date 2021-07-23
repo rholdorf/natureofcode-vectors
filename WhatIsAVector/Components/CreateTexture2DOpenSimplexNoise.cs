@@ -13,8 +13,8 @@ namespace WhatIsAVector.Components
         private Color _color;
         private SpriteBatch _spriteBatch;
         private readonly Game _game;
-        private OpenSimplex2F _noise;
-        private float _inc = 0.01f;
+        private readonly OpenSimplex2F _noise;
+        private readonly float _inc = 0.01f;
         private Texture2D _texture;
         private float zoff = 0f;
 

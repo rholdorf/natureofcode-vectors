@@ -22,9 +22,9 @@ namespace WhatIsAVector
 
         private SpriteFont _hudFont;
 
-        private Perlin _perlin = new();
-        private Random _random = new();
-        private OpenSimplex2F _noise = new OpenSimplex2F(1);
+        private readonly Perlin _perlin = new();
+        private readonly Random _random = new();
+        private readonly OpenSimplex2F _noise = new(1);
 
 
 

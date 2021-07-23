@@ -13,14 +13,14 @@ namespace WhatIsAVector.Components
         private Vector2 _acceleration;
         private Vector2 _weight;
         private float _mu; // coefficient of friction
-        private float _mass;
+        private readonly float _mass;
         private Color _color;
-        private float _screenWidth;
-        private float _screenHeight;
+        private readonly float _screenWidth;
+        private readonly float _screenHeight;
         private SpriteBatch _spriteBatch;
         private readonly Game _game;
         private Vector2 _gravity = new(0, 0.2f);
-        private float _radius;
+        private readonly float _radius;
 
         private Rectangle _boundery;
 
