@@ -12,7 +12,7 @@ namespace WhatIsAVector
     public class Game1 : Game
     {
         private bool _disposed;
-        private readonly GraphicsDeviceManager _graphics;
+        private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         //private RenderTarget2D _screenBuffer;
         private Matrix _translationMatrix;
@@ -108,7 +108,9 @@ namespace WhatIsAVector
             if (disposing && !_disposed)
             {
                 _graphics?.Dispose();
+                _graphics = null;
                 _spriteBatch?.Dispose();
+                _spriteBatch = null;
                 _disposed = true;
             }
 

@@ -7,6 +7,7 @@ namespace WhatIsAVector.Components
 {
     public class BouncingBall : DrawableGameComponent
     {
+        private bool _disposed;
         private Vector2 _position;
         private Vector2 _velocity;
         private Vector2 _acceleration;
@@ -129,8 +130,6 @@ namespace WhatIsAVector.Components
             }
         }
 
-
-
         public override void Draw(GameTime gameTime)
         {
             _spriteBatch.Begin();
@@ -138,6 +137,18 @@ namespace WhatIsAVector.Components
             _spriteBatch.End();
 
             base.Draw(gameTime);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && !_disposed)
+            {
+                _spriteBatch?.Dispose();
+                _spriteBatch = null;
+                _disposed = true;
+            }
+
+            base.Dispose(disposing);
         }
     }
 }

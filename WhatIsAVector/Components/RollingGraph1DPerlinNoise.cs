@@ -8,11 +8,12 @@ namespace WhatIsAVector.Components
 {
     public class RollingGraph1DPerlinNoise : DrawableGameComponent
     {
+        private bool _disposed;
         private Vector2 _position;
         private Color _color;
         private float _screenWidth;
         private float _halfHeight;
-        private readonly SpriteBatch _spriteBatch;
+        private SpriteBatch _spriteBatch;
         private readonly Game _game;
         private Perlin _noise;
         private List<Vector2> _points = new List<Vector2>();
@@ -60,5 +61,18 @@ namespace WhatIsAVector.Components
 
             base.Draw(gameTime);
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && !_disposed)
+            {
+                _spriteBatch?.Dispose();
+                _spriteBatch = null;
+                _disposed = true;
+            }
+
+            base.Dispose(disposing);
+        }
     }
 }
+

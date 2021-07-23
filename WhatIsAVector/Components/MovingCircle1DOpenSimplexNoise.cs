@@ -7,11 +7,12 @@ namespace WhatIsAVector
 {
     public class MovingCircle1DOpenSimplexNoise : DrawableGameComponent
     {
+        private bool _disposed;
         private Vector2 _position;
         private Color _color;
         private float _screenWidth;
         private float _screenHeight;
-        private readonly SpriteBatch _spriteBatch;
+        private SpriteBatch _spriteBatch;
         private readonly Game _game;
         private float _offset1;
         private float _offset2;
@@ -59,6 +60,18 @@ namespace WhatIsAVector
             _spriteBatch.End();
 
             base.Draw(gameTime);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && _disposed)
+            {
+                _spriteBatch.Dispose();
+                _spriteBatch = null;
+                _disposed = true;
+            }
+
+            base.Dispose(disposing);
         }
     }
 }

@@ -12,6 +12,7 @@ namespace WhatIsAVector.Components
     /// </summary>
     public class FpsCounter : DrawableGameComponent
     {
+        private bool _disposed;
         private const int REFRESEHS_PER_SEC = 4;  // how many times do we calculate FPS & UPS every second
         private readonly TimeSpan _refreshTime = TimeSpan.FromMilliseconds(1000 / REFRESEHS_PER_SEC);
         private TimeSpan _elapsedTime = TimeSpan.Zero;
@@ -19,10 +20,10 @@ namespace WhatIsAVector.Components
         private static int _ups = 0;
         private int _frameCounter = 0;
         private int _updateCounter = 0;
-        private readonly SpriteBatch _spriteBatch;
+        private SpriteBatch _spriteBatch;
         private readonly SpriteFont _font;
         private Vector2 _position;
-        private static readonly Process _process = Process.GetCurrentProcess();
+        private static Process _process = Process.GetCurrentProcess();
         private Color _color;
         private StringBuilder _outputSb = new();
         private Color _shadow = new(0, 0, 0, 100);
@@ -86,6 +87,20 @@ namespace WhatIsAVector.Components
             _spriteBatch.DrawString(_font, _outputSb.ToString(), _position, _color);
             _spriteBatch.End();
             base.Draw(gameTime);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && _disposed)
+            {
+                _spriteBatch?.Dispose();
+                _spriteBatch = null;
+                _process?.Dispose();
+                _process = null;
+                _disposed = true;
+            }
+
+            base.Dispose(disposing);
         }
     }
 }

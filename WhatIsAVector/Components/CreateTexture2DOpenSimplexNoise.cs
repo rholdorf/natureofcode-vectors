@@ -8,9 +8,10 @@ namespace WhatIsAVector.Components
 {
     public class CreateTexture2DOpenSimplexNoise : DrawableGameComponent
     {
+        private bool _disposed;
         private Vector2 _position;
         private Color _color;
-        private readonly SpriteBatch _spriteBatch;
+        private SpriteBatch _spriteBatch;
         private readonly Game _game;
         private OpenSimplex2F _noise;
         private float _inc = 0.01f;
@@ -73,6 +74,19 @@ namespace WhatIsAVector.Components
             _spriteBatch.End();
 
             base.Draw(gameTime);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && !_disposed)
+            {
+                _spriteBatch?.Dispose();
+                _spriteBatch = null;
+                _texture?.Dispose();
+                _texture = null;
+                _disposed = true;
+            }
+            base.Dispose(disposing);
         }
     }
 }
