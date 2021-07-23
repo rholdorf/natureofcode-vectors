@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace WhatIsAVector.Components
 {
@@ -10,6 +11,7 @@ namespace WhatIsAVector.Components
         private Vector2 _velocity;
         private Vector2 _acceleration;
         private Vector2 _weight;
+        private float _mu; // coefficient of friction
         private float _mass;
         private Color _color;
         private float _screenWidth;
@@ -53,12 +55,18 @@ namespace WhatIsAVector.Components
             _acceleration = new Vector2(0, 0);
             _weight = Vector2.Multiply(_gravity, _mass);
             _spriteBatch = new SpriteBatch(_game.GraphicsDevice);
-
+            _mu = 0.01f;
             base.Initialize();
         }
 
         public override void Update(GameTime gameTime)
         {
+            var keyboardState = Keyboard.GetState();
+            if (keyboardState.IsKeyDown(Keys.Space))
+            {
+                ApplyForce(new Vector2(0.1f, 0)); // "wind" from left to right
+            }
+
             ApplyForce(_weight);
 
             _velocity += _acceleration;
@@ -78,30 +86,46 @@ namespace WhatIsAVector.Components
             _acceleration += forceDivByMass;
         }
 
+        private void ApplyFriction()
+        {
+            if (_position.Y >= _boundery.Bottom)
+            {
+                var friction = _velocity.Copy();
+                friction.Normalize();
+                friction *= -1;
+                friction.SetMagnitude(_mu * _mass);
+                ApplyForce(friction); // take a little bit off of velocity
+            }
+        }
+
         private void CheckEdges()
         {
             if (_position.Y >= _boundery.Bottom)
             {
-                _position.Y = _boundery.Bottom - (_position.Y - _boundery.Bottom); // reposition, just in case it went beyond the boundery before the check takes place
+                _position.Y = _boundery.Bottom; // reposition, just in case it went beyond the boundery before the check takes place
                 _velocity.Y *= -1;
+                ApplyFriction();
             }
 
             if (_position.Y <= _boundery.Top)
             {
-                _position.Y = _boundery.Top + (_boundery.Top - _position.Y); // reposition
+                _position.Y = _boundery.Top; // reposition
                 _velocity.Y *= -1;
+                ApplyFriction();
             }
 
             if (_position.X >= _boundery.Right)
             {
-                _position.X = _boundery.Right - (_position.X - _boundery.Right); // reposition
+                _position.X = _boundery.Right; // reposition
                 _velocity.X *= -1;
+                ApplyFriction();
             }
 
             if (_position.X <= _boundery.Left)
             {
-                _position.X = _boundery.Left + (_boundery.Left - _position.X); // reposition
+                _position.X = _boundery.Left; // reposition
                 _velocity.X *= -1;
+                ApplyFriction();
             }
         }
 

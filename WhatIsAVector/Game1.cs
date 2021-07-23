@@ -58,12 +58,12 @@ namespace WhatIsAVector
             //Components.Add(new RollingGraph1DPerlinNoise(this, Color.Red, WIDTH, HEIGHT, _perlin));
             //Components.Add(new RollingGraph1DOpenSimplexNoise(this, Color.Yellow, WIDTH, HEIGHT, _noise));
 
-            int howMany = 100;
+            int howMany = 10;
             for (int i = 0; i < howMany; i++)
             {
                 Components.Add(new BouncingBall(
                     game: this,
-                    position: new Vector2((float)WIDTH / howMany * i, (float)HEIGHT / 2 - (_random.Next(0, howMany * 2))),
+                    position: new Vector2((float)WIDTH / howMany * i, (float)HEIGHT / 1.25f - (_random.Next(0, howMany * 2))),
                     color: Color.White,
                     radius: 10f * (float)(Math.Pow(_random.NextDouble() + 1, 2)),
                     mass: 2,
