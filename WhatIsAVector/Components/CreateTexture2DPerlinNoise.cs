@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Noise;
 
@@ -58,11 +57,6 @@ namespace WhatIsAVector.Components
             zoff += _inc;
             _texture.SetData(colorData);
         }
-
-        //public override void Update(GameTime gameTime)
-        //{
-        //    base.Update(gameTime);
-        //}
 
         public override void Draw(GameTime gameTime)
         {
