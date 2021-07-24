@@ -7,19 +7,19 @@ namespace WhatIsAVector.Components
     public class BouncingBall : DrawableGameComponent
     {
         private bool _disposed;
-        private Vector2 _position;
-        private Vector2 _velocity;
-        private Vector2 _acceleration;
-        private Vector2 _weight;
-        private float _mu; // coefficient of friction
-        private readonly float _mass;
-        private Color _color;
-        private readonly float _screenWidth;
-        private readonly float _screenHeight;
+        protected Vector2 _position;
+        protected Vector2 _velocity;
+        protected Vector2 _acceleration;
+        protected Vector2 _weight;
+        protected float _mu; // coefficient of friction
+        protected Vector2 _gravity = new(0, 0.2f);
+        protected readonly float _mass;
+        protected Color _color;
+        protected readonly float _radius;
+        protected readonly float _screenWidth;
+        protected readonly float _screenHeight;
+        protected readonly Game _game;
         private SpriteBatch _spriteBatch;
-        private readonly Game _game;
-        private Vector2 _gravity = new(0, 0.2f);
-        private readonly float _radius;
 
         private Rectangle _boundery;
 
@@ -80,7 +80,7 @@ namespace WhatIsAVector.Components
             base.Update(gameTime);
         }
 
-        private void ApplyForce(Vector2 force)
+        protected void ApplyForce(Vector2 force)
         {
             var forceDivByMass = Vector2.Divide(force, _mass);
             _acceleration += forceDivByMass;

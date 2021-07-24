@@ -43,7 +43,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\Fonts\" />
-    <Folder Include="Components\" />
     <Folder Include="Noise\" />
   </ItemGroup>
 </Project>

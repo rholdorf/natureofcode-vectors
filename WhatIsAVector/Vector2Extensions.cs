@@ -14,6 +14,7 @@ namespace WhatIsAVector
 
         public static void SetMagnitude(ref this Vector2 vector, float ammount)
         {
+            // magnitude is the vector "length"
             vector.Normalize();
             vector *= ammount;
         }
