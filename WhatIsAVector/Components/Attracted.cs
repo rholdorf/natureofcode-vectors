@@ -16,5 +16,15 @@ namespace WhatIsAVector.Components
         {
         }
 
+        public override void Update(GameTime gameTime)
+        {
+            _velocity += _acceleration;
+            _position += _velocity;
+            // reset acceleration, once applyed
+            _acceleration.X = 0;
+            _acceleration.Y = 0;
+
+            base.Update(gameTime);
+        }
     }
 }

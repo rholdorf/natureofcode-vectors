@@ -42,10 +42,13 @@ namespace WhatIsAVector.Components
         }
 
         public Vector2 Position { get { return _position; } }
+        public Vector2 Velocity { get { return _velocity; } set { _velocity = value; } }
         public Vector2 Acceleration { get { return _acceleration; } }
         public Vector2 Weigth { get { return _weight; } }
         public float Mu { get { return _mu; } }
         public float Mass { get { return _mass; } }
+        public float Radius { get { return _radius; } }
+        public Color Color { get { return _color; } set { _color = value; } }
 
         public void ApplyForce(Vector2 force)
         {

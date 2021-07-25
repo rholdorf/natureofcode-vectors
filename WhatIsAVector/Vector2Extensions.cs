@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 
 namespace WhatIsAVector
 {
@@ -22,6 +23,14 @@ namespace WhatIsAVector
         public static Vector2 Copy(this Vector2 vector)
         {
             return new Vector2(vector.X, vector.Y);
+        }
+
+        public static Vector2 Randomize(this Vector2 vector, Random random)
+        {
+            var angle = random.NextDouble() * (Math.PI * 2);
+            vector.X = (float)Math.Cos(angle);
+            vector.Y = (float)Math.Sin(angle);
+            return vector;
         }
 
     }

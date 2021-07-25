@@ -25,7 +25,7 @@ namespace WhatIsAVector
         private readonly Random _random = new();
         private readonly OpenSimplex2F _noise = new(1);
 
-
+        private Color _backgroundColor = new Color(0, 0, 0, 10);
 
 
 
@@ -78,10 +78,11 @@ namespace WhatIsAVector
                 var attracted = new Attracted(
                     game: this,
                     color: Color.Orange,
-                    position: new Vector2(_random.Next(0, WIDTH), _random.Next(0, HEIGHT)),
+                    position: new Vector2(_random.Next(0, WIDTH/4*3), _random.Next(0, HEIGHT/4*3)),
                     mass: 200f, //(float)((_random.NextDouble() + 10D) * 50D),
                     screenWidth: WIDTH,
                     screenHeight: HEIGHT);
+                attracted.Velocity = new Vector2().Randomize(_random);
                 Components.Add(attracted);
                 attracteds.Add(attracted);
             }
@@ -142,11 +143,11 @@ namespace WhatIsAVector
 
         protected override void Draw(GameTime gameTime)
         {
-            _graphics.GraphicsDevice.Clear(Color.CornflowerBlue);
-
+            // _graphics.GraphicsDevice.Clear(Color.CornflowerBlue);
             //_spriteBatch.Begin(transformMatrix: _translationMatrix);
-            //_spriteBatch.Begin();
-            //_spriteBatch.End();
+            _spriteBatch.Begin();
+            _spriteBatch.FillRectangle(0, 0, WIDTH, HEIGHT, _backgroundColor);
+            _spriteBatch.End();
 
             base.Draw(gameTime);
         }
