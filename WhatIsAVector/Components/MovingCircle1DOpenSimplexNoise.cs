@@ -16,11 +16,12 @@ namespace WhatIsAVector.Components
             Color color,
             Vector2 position,
             float radius,
+            float mass,
             float screenWidth,
             float screenHeight,
             OpenSimplex2F noise,
             Random random)
-            : base(game, color, position, radius, screenWidth, screenHeight)
+            : base(game, color, position, radius, mass, screenWidth, screenHeight)
         {
             _noise = noise;
             _offset1 = (float)random.NextDouble() * 500;

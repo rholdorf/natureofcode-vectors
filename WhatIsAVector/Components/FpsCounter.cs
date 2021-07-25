@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -17,15 +16,17 @@ namespace WhatIsAVector.Components
         private TimeSpan _elapsedTime = TimeSpan.Zero;
         private static int _fps = 0;
         private static int _ups = 0;
+        private static int _oldFps = 0;
+        private static int _oldUps = 0;
         private int _frameCounter = 0;
         private int _updateCounter = 0;
         private SpriteBatch _spriteBatch;
         private readonly SpriteFont _font;
         private Vector2 _position;
-        private static Process _process = Process.GetCurrentProcess();
         private Color _color;
-        private readonly StringBuilder _outputSb = new();
         private Color _shadow = new(0, 0, 0, 100);
+        private readonly StringBuilder _outputSb = new();
+        private string _fpsUps = string.Empty;
 
         public FpsCounter(Game game, SpriteFont font, Vector2 pos, Color color)
             : base(game)
@@ -35,15 +36,6 @@ namespace WhatIsAVector.Components
             _position = pos;
             _color = color;
         }
-
-        ///// <summary>
-        ///// Allows the game component to perform any initialization it needs to before starting
-        ///// to run.  This is where it can query for any required services and load content.
-        ///// </summary>
-        //public override void Initialize()
-        //{
-        //    base.Initialize();
-        //}
 
         /// <summary>
         /// Allows performace monitor to calculate update rate.
@@ -61,15 +53,19 @@ namespace WhatIsAVector.Components
                 _ups = _updateCounter * REFRESEHS_PER_SEC;
                 _frameCounter = 0;
                 _updateCounter = 0;
-            }
 
-            _outputSb.Clear();
-            _outputSb.Append(_fps);
-            _outputSb.Append(" ");
-            _outputSb.Append(_ups);
-            _outputSb.Append(" (");
-            _outputSb.Append((_process.PrivateMemorySize64 / 1024 / 1024).ToString());
-            _outputSb.Append(" MB)");
+                if (_fps != _oldFps || _ups != _oldUps)
+                {
+                    _oldFps = _fps;
+                    _oldUps = _ups;
+                    _outputSb.Clear();
+                    _outputSb.Append("F");
+                    _outputSb.Append(_fps);
+                    _outputSb.Append(" U");
+                    _outputSb.Append(_ups);
+                    _fpsUps = _outputSb.ToString();
+                }
+            }
 
             base.Update(gameTime);
         }
@@ -82,8 +78,8 @@ namespace WhatIsAVector.Components
         {
             _frameCounter++; // increment frame counter
             _spriteBatch.Begin();
-            _spriteBatch.DrawString(_font, _outputSb.ToString(), _position + new Vector2(1, 1), _shadow); // shadow
-            _spriteBatch.DrawString(_font, _outputSb.ToString(), _position, _color);
+            _spriteBatch.DrawString(_font, _fpsUps, _position + new Vector2(1, 1), _shadow); // shadow
+            _spriteBatch.DrawString(_font, _fpsUps, _position, _color);
             _spriteBatch.End();
             base.Draw(gameTime);
         }
@@ -94,8 +90,6 @@ namespace WhatIsAVector.Components
             {
                 _spriteBatch?.Dispose();
                 _spriteBatch = null;
-                _process?.Dispose();
-                _process = null;
                 _disposed = true;
             }
 

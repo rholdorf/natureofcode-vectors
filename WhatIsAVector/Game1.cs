@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -50,19 +51,49 @@ namespace WhatIsAVector
             //Components.Add(new CreateTexture2DPerlinNoise(this, new Vector2(0, 0), Color.White, WIDTH / 2, HEIGHT / 2, _perlin));
             //Components.Add(new CreateTexture2DOpenSimplexNoise(this, new Vector2(WIDTH / 2, 0), Color.White, WIDTH / 2, HEIGHT / 2, _noise));
 
-            Components.Add(new MovingCircle1DPerlinNoise(this, Color.White, new Vector2(WIDTH / 2, HEIGHT / 2), 20f, WIDTH, HEIGHT, _perlin, _random));
-            Components.Add(new MovingCircle1DOpenSimplexNoise(this, Color.Yellow, new Vector2(WIDTH / 2, HEIGHT / 2), 20f, WIDTH, HEIGHT, _noise, _random));
+            //Components.Add(new MovingCircle1DPerlinNoise(this, Color.White, new Vector2(WIDTH / 2, HEIGHT / 2), 20f, 1, WIDTH, HEIGHT, _perlin, _random));
+            //Components.Add(new MovingCircle1DOpenSimplexNoise(this, Color.Yellow, new Vector2(WIDTH / 2, HEIGHT / 2), 20f, 1, WIDTH, HEIGHT, _noise, _random));
 
             //Components.Add(new RollingGraph1DPerlinNoise(this, Color.Red, WIDTH, HEIGHT, _perlin));
             //Components.Add(new RollingGraph1DOpenSimplexNoise(this, Color.Yellow, WIDTH, HEIGHT, _noise));
 
-            AddBouncingBalls(5);
-            AddBallDrag(5);
+
+            //AddBouncingBalls(5);
+            //AddBallDrag(5);
+
+            AddAttractor(5);
 
             Components.Add(new FpsCounter(this, _hudFont, new Vector2(5, 5), Color.Yellow));
             _translationMatrix = Matrix.CreateTranslation(WIDTH / 2, HEIGHT / 2, 0f);
 
             base.Initialize();
+        }
+
+        private void AddAttractor(int howMany)
+        {
+            var attracteds = new List<Attracted>();
+
+            for (int i = 0; i < howMany; i++)
+            {
+                var attracted = new Attracted(
+                    game: this,
+                    color: Color.Orange,
+                    position: new Vector2(_random.Next(0, WIDTH), _random.Next(0, HEIGHT)),
+                    mass: 200f, //(float)((_random.NextDouble() + 10D) * 50D),
+                    screenWidth: WIDTH,
+                    screenHeight: HEIGHT);
+                Components.Add(attracted);
+                attracteds.Add(attracted);
+            }
+
+            Components.Add(new Attractor(
+                game: this,
+                color: Color.White,
+                position: new Vector2(WIDTH / 2, HEIGHT / 2),
+                mass: 200f,
+                screenWidth: WIDTH,
+                screenHeight: HEIGHT,
+                attracteds: attracteds.ToArray()));
         }
 
         private void AddBouncingBalls(int howMany)

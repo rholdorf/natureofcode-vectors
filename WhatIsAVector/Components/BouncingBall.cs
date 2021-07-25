@@ -6,12 +6,7 @@ namespace WhatIsAVector.Components
 {
     public class BouncingBall : Mover
     {
-        protected Vector2 _velocity;
-        protected Vector2 _acceleration;
-        protected Vector2 _weight;
-        protected float _mu; // coefficient of friction
-        protected Vector2 _gravity = new(0, 0.2f);
-        protected readonly float _mass;
+        protected Vector2 _gravity = new(0, 0.2f); // direction of "gravity" pull
 
         private Rectangle _boundery;
 
@@ -23,7 +18,7 @@ namespace WhatIsAVector.Components
             float mass,
             float screenWidth,
             float screenHeight)
-            : base(game, color, position, radius, screenWidth, screenHeight)
+            : base(game, color, position, radius, mass, screenWidth, screenHeight)
         {
             _mass = mass;
         }
@@ -65,26 +60,12 @@ namespace WhatIsAVector.Components
             base.Update(gameTime);
         }
 
-        protected void ApplyForce(Vector2 force)
-        {
-            var forceDivByMass = Vector2.Divide(force, _mass);
-            _acceleration += forceDivByMass;
-        }
-
-        private void ApplyFriction()
-        {
-            if (_position.Y >= _boundery.Bottom)
-            {
-                var friction = _velocity.Copy();
-                friction.Normalize();
-                friction *= -1;
-                friction.SetMagnitude(_mu * _mass);
-                ApplyForce(friction); // take a little bit off of velocity
-            }
-        }
-
         private void CheckEdges()
         {
+
+            if (_position.Y >= _boundery.Bottom)
+                ApplyFriction(); // will change the Y, that's why it is tested again below
+
             if (_position.Y >= _boundery.Bottom)
             {
                 _position.Y = _boundery.Bottom; // reposition, just in case it went beyond the boundery before the check takes place
