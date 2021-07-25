@@ -50,13 +50,23 @@ namespace WhatIsAVector
             //Components.Add(new CreateTexture2DPerlinNoise(this, new Vector2(0, 0), Color.White, WIDTH / 2, HEIGHT / 2, _perlin));
             //Components.Add(new CreateTexture2DOpenSimplexNoise(this, new Vector2(WIDTH / 2, 0), Color.White, WIDTH / 2, HEIGHT / 2, _noise));
 
-            //Components.Add(new MovingCircle1DPerlinNoise(this, Color.White, WIDTH, HEIGHT, _perlin, _random));
-            //Components.Add(new MovingCircle1DOpenSimplexNoise(this, Color.Yellow, WIDTH, HEIGHT, _noise, _random));
+            Components.Add(new MovingCircle1DPerlinNoise(this, Color.White, new Vector2(WIDTH / 2, HEIGHT / 2), 20f, WIDTH, HEIGHT, _perlin, _random));
+            Components.Add(new MovingCircle1DOpenSimplexNoise(this, Color.Yellow, new Vector2(WIDTH / 2, HEIGHT / 2), 20f, WIDTH, HEIGHT, _noise, _random));
 
             //Components.Add(new RollingGraph1DPerlinNoise(this, Color.Red, WIDTH, HEIGHT, _perlin));
             //Components.Add(new RollingGraph1DOpenSimplexNoise(this, Color.Yellow, WIDTH, HEIGHT, _noise));
 
-            int howMany = 5;
+            AddBouncingBalls(5);
+            AddBallDrag(5);
+
+            Components.Add(new FpsCounter(this, _hudFont, new Vector2(5, 5), Color.Yellow));
+            _translationMatrix = Matrix.CreateTranslation(WIDTH / 2, HEIGHT / 2, 0f);
+
+            base.Initialize();
+        }
+
+        private void AddBouncingBalls(int howMany)
+        {
             for (int i = 0; i < howMany; i++)
             {
                 Components.Add(new BouncingBall(
@@ -68,7 +78,10 @@ namespace WhatIsAVector
                     screenWidth: WIDTH,
                     screenHeight: HEIGHT));
             }
+        }
 
+        private void AddBallDrag(int howMany)
+        {
             for (int i = 0; i < howMany; i++)
             {
                 Components.Add(new BallDrag(
@@ -80,11 +93,6 @@ namespace WhatIsAVector
                     screenWidth: WIDTH,
                     screenHeight: HEIGHT));
             }
-
-            Components.Add(new FpsCounter(this, _hudFont, new Vector2(5, 5), Color.Yellow));
-            _translationMatrix = Matrix.CreateTranslation(WIDTH / 2, HEIGHT / 2, 0f);
-
-            base.Initialize();
         }
 
         protected override void LoadContent()

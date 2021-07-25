@@ -4,22 +4,14 @@ using Microsoft.Xna.Framework.Input;
 
 namespace WhatIsAVector.Components
 {
-    public class BouncingBall : DrawableGameComponent
+    public class BouncingBall : Mover
     {
-        private bool _disposed;
-        protected Vector2 _position;
         protected Vector2 _velocity;
         protected Vector2 _acceleration;
         protected Vector2 _weight;
         protected float _mu; // coefficient of friction
         protected Vector2 _gravity = new(0, 0.2f);
         protected readonly float _mass;
-        protected Color _color;
-        protected readonly float _radius;
-        protected readonly float _screenWidth;
-        protected readonly float _screenHeight;
-        protected readonly Game _game;
-        private SpriteBatch _spriteBatch;
 
         private Rectangle _boundery;
 
@@ -31,15 +23,9 @@ namespace WhatIsAVector.Components
             float mass,
             float screenWidth,
             float screenHeight)
-            : base(game)
+            : base(game, color, position, radius, screenWidth, screenHeight)
         {
-            _game = game;
-            _position = position;
-            _color = color;
-            _radius = radius;
             _mass = mass;
-            _screenWidth = screenWidth;
-            _screenHeight = screenHeight;
         }
 
         public override void Initialize()
@@ -54,7 +40,6 @@ namespace WhatIsAVector.Components
             _velocity = new Vector2(0, 0);
             _acceleration = new Vector2(0, 0);
             _weight = Vector2.Multiply(_gravity, _mass);
-            _spriteBatch = new SpriteBatch(_game.GraphicsDevice);
             _mu = 0.01f;
             base.Initialize();
         }
@@ -127,27 +112,6 @@ namespace WhatIsAVector.Components
                 _velocity.X *= -1;
                 ApplyFriction();
             }
-        }
-
-        public override void Draw(GameTime gameTime)
-        {
-            _spriteBatch.Begin();
-            _spriteBatch.DrawCircle(_position, _radius, 20, _color, 1);
-            _spriteBatch.End();
-
-            base.Draw(gameTime);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && !_disposed)
-            {
-                _spriteBatch?.Dispose();
-                _spriteBatch = null;
-                _disposed = true;
-            }
-
-            base.Dispose(disposing);
         }
     }
 }

@@ -1,19 +1,11 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Noise;
 
 namespace WhatIsAVector.Components
 {
-    public class MovingCircle1DPerlinNoise : DrawableGameComponent
+    public class MovingCircle1DPerlinNoise : Mover
     {
-        private bool _disposed;
-        private Vector2 _position;
-        private Color _color;
-        private readonly float _screenWidth;
-        private readonly float _screenHeight;
-        private SpriteBatch _spriteBatch;
-        private readonly Game _game;
         private float _offset1;
         private float _offset2;
         private readonly Perlin _noise;
@@ -21,19 +13,15 @@ namespace WhatIsAVector.Components
         public MovingCircle1DPerlinNoise(
             Game game,
             Color color,
+            Vector2 position,
+            float radius,
             float screenWidth,
             float screenHeight,
             Perlin noise,
             Random random)
-            : base(game)
+            : base(game, color, position, radius, screenWidth, screenHeight)
         {
-            _screenWidth = screenWidth;
-            _screenHeight = screenHeight;
-            _position = new Vector2(_screenWidth / 2, _screenHeight / 2);
-            _color = color;
-            _game = game;
             _noise = noise;
-            _spriteBatch = new SpriteBatch(_game.GraphicsDevice);
             _offset1 = (float)random.NextDouble() * 500;
             _offset2 = (float)random.NextDouble() * 1000;
         }
@@ -46,27 +34,6 @@ namespace WhatIsAVector.Components
             _offset2 += 0.015f;
 
             base.Update(gameTime);
-        }
-
-        public override void Draw(GameTime gameTime)
-        {
-            _spriteBatch.Begin();
-            _spriteBatch.DrawCircle(_position, 20, 20, _color);
-            _spriteBatch.End();
-
-            base.Draw(gameTime);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && _disposed)
-            {
-                _spriteBatch?.Dispose();
-                _spriteBatch = null;
-                _disposed = true;
-            }
-
-            base.Dispose(disposing);
         }
     }
 }

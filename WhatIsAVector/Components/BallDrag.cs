@@ -15,7 +15,7 @@ namespace WhatIsAVector.Components
         public BallDrag(Game game, Vector2 position, Color color, float radius, float mass, float screenWidth, float screenHeight)
             : base(game, position, color, radius, mass, screenWidth, screenHeight)
         {
-            _spriteBatch = new SpriteBatch(_game.GraphicsDevice);
+            _spriteBatch = new SpriteBatch(game.GraphicsDevice);
             _viscousArea = new Rectangle(0, (int)screenHeight / 2, (int)screenWidth, (int)screenHeight / 2);
         }
 
