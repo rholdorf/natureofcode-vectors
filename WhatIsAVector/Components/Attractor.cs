@@ -7,7 +7,7 @@ namespace WhatIsAVector.Components
     {
         private float G = 1f; // gravitational constant
 
-        private Attracted[] _attracteds;
+        private readonly Attracted[] _attracteds;
         private float _doubleRadius;
 
         public Attractor(
@@ -39,19 +39,27 @@ namespace WhatIsAVector.Components
                 var magnitude = G * (_mass * attracted.Mass) / distanceSquared;
                 force.SetMagnitude(magnitude);
                 attracted.ApplyForce(force);
-                attracted.Color= Color.White;
+                attracted.Color = Color.White;
             }
             else
             {
+                // collided
                 attracted.Color = Color.Red;
+                attracted.Popped = true;
             }
-            // else, thy should have collided
+
         }
 
         public override void Update(GameTime gameTime)
         {
             for (int i = 0; i < _attracteds.Length; i++)
-                Attract(_attracteds[i]);
+            {
+                var attracted = _attracteds[i];
+                if (attracted.Popped)
+                    continue;
+
+                Attract(attracted);
+            }
 
             base.Update(gameTime);
         }

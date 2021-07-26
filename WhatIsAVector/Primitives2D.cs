@@ -138,7 +138,6 @@ namespace WhatIsAVector
             spriteBatch.Draw(pixel, rect, color);
         }
 
-
         /// <summary>
         /// Draws a filled rectangle
         /// </summary>

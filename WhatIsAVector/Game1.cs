@@ -61,10 +61,12 @@ namespace WhatIsAVector
             //AddBouncingBalls(5);
             //AddBallDrag(5);
 
-            AddAttractor(5);
+            //AddAttractor(50);
+
+            Components.Add(new SpinningRectangle(this, Color.White, new Rectangle(0, 0, 128, 64), WIDTH, HEIGHT));
 
             Components.Add(new FpsCounter(this, _hudFont, new Vector2(5, 5), Color.Yellow));
-            _translationMatrix = Matrix.CreateTranslation(WIDTH / 2, HEIGHT / 2, 0f);
+            _translationMatrix = Matrix.CreateTranslation(WIDTH / 2f, HEIGHT / 2f, 0f);
 
             base.Initialize();
         }
@@ -79,7 +81,7 @@ namespace WhatIsAVector
                     game: this,
                     color: Color.Orange,
                     position: new Vector2(_random.Next(0, WIDTH/4*3), _random.Next(0, HEIGHT/4*3)),
-                    mass: 200f, //(float)((_random.NextDouble() + 10D) * 50D),
+                    mass: (float)_random.Next(50, 500),
                     screenWidth: WIDTH,
                     screenHeight: HEIGHT);
                 attracted.Velocity = new Vector2().Randomize(_random);
@@ -143,11 +145,11 @@ namespace WhatIsAVector
 
         protected override void Draw(GameTime gameTime)
         {
-            // _graphics.GraphicsDevice.Clear(Color.CornflowerBlue);
+             _graphics.GraphicsDevice.Clear(Color.CornflowerBlue);
             //_spriteBatch.Begin(transformMatrix: _translationMatrix);
-            _spriteBatch.Begin();
-            _spriteBatch.FillRectangle(0, 0, WIDTH, HEIGHT, _backgroundColor);
-            _spriteBatch.End();
+            //_spriteBatch.Begin();
+            //_spriteBatch.FillRectangle(0, 0, WIDTH, HEIGHT, _backgroundColor); // fade effect
+            //_spriteBatch.End();
 
             base.Draw(gameTime);
         }

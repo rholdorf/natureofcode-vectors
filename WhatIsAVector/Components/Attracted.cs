@@ -5,6 +5,8 @@ namespace WhatIsAVector.Components
 {
     public class Attracted : Mover
     {
+        private bool _popped;
+
         public Attracted(
             Game game,
             Color color,
@@ -16,8 +18,13 @@ namespace WhatIsAVector.Components
         {
         }
 
+        public bool Popped { get { return _popped; } set { _popped = value; } }
+
         public override void Update(GameTime gameTime)
         {
+            if (_popped)
+                return;
+
             _velocity += _acceleration;
             _position += _velocity;
             // reset acceleration, once applyed
@@ -25,6 +32,14 @@ namespace WhatIsAVector.Components
             _acceleration.Y = 0;
 
             base.Update(gameTime);
+        }
+
+        public override void Draw(GameTime gameTime)
+        {
+            if (_popped)
+                return;
+
+            base.Draw(gameTime);
         }
     }
 }
