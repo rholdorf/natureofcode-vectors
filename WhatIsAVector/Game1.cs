@@ -62,13 +62,43 @@ namespace WhatIsAVector
             //AddBallDrag(5);
 
             //AddAttractor(50);
+            AddAttractorTriangle(5);
 
-            Components.Add(new SpinningRectangle(this, Color.White, new Rectangle(0, 0, 128, 64), WIDTH, HEIGHT));
+            //Components.Add(new SpinningRectangle(this, Color.White, new Rectangle(0, 0, 128, 64), WIDTH, HEIGHT));
 
             Components.Add(new FpsCounter(this, _hudFont, new Vector2(5, 5), Color.Yellow));
             _translationMatrix = Matrix.CreateTranslation(WIDTH / 2f, HEIGHT / 2f, 0f);
 
             base.Initialize();
+        }
+
+
+        private void AddAttractorTriangle(int howMany)
+        {
+            var attracteds = new List<AttractedTriangle>();
+
+            for (int i = 0; i < howMany; i++)
+            {
+                var attracted = new AttractedTriangle(
+                    game: this,
+                    color: Color.Orange,
+                    position: new Vector2(_random.Next(0, WIDTH / 4 * 3), _random.Next(0, HEIGHT / 4 * 3)),
+                    mass: (float)_random.Next(50, 500),
+                    screenWidth: WIDTH,
+                    screenHeight: HEIGHT);
+                attracted.Velocity = new Vector2().Randomize(_random);
+                Components.Add(attracted);
+                attracteds.Add(attracted);
+            }
+
+            Components.Add(new Attractor(
+                game: this,
+                color: Color.White,
+                position: new Vector2(WIDTH / 2, HEIGHT / 2),
+                mass: 200f,
+                screenWidth: WIDTH,
+                screenHeight: HEIGHT,
+                attracteds: attracteds.ToArray()));
         }
 
         private void AddAttractor(int howMany)

@@ -14,9 +14,11 @@ namespace WhatIsAVector.Components
         private readonly float _screenWidth;
         private readonly float _screenHeight;
         private Vector2 _position;
-        private Texture2D _texture;
+        private readonly Texture2D _texture;
         private Matrix _translationMatrix;
-        private float _rotation;
+        private float _angle;
+        private float _angularVelocity = 0;
+        private float _angulatAcceleration = 0.01f;
         private Vector2 _anchorPoint;
 
         public SpinningRectangle(
@@ -49,14 +51,15 @@ namespace WhatIsAVector.Components
 
         public override void Update(GameTime gameTime)
         {
-            _rotation += 0.01f;
+            _angle += _angularVelocity;
+            _angularVelocity += _angulatAcceleration;
             base.Update(gameTime);
         }
 
         public override void Draw(GameTime gameTime)
         {
             _spriteBatch.Begin(transformMatrix: _translationMatrix);
-            _spriteBatch.Draw(_texture, _position, null, Color.White, _rotation, _anchorPoint, 1, SpriteEffects.None, 1);
+            _spriteBatch.Draw(_texture, _position, null, Color.White, _angle, _anchorPoint, 1, SpriteEffects.None, 1);
             _spriteBatch.End();
             base.Draw(gameTime);
         }

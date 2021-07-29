@@ -4,19 +4,20 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace WhatIsAVector.Components
 {
-    public class Mover : DrawableGameComponent
+    public class Mover : DrawableGameComponent, IMover
     {
         protected Vector2 _velocity = new();
         protected Vector2 _acceleration = new();
         protected Vector2 _weight = new();
         protected float _mu; // coefficient of friction
+        protected float _angle = 0;
 
         private bool _disposed;
         protected Vector2 _position;
         protected Color _color;
         protected readonly float _screenWidth;
         protected readonly float _screenHeight;
-        private SpriteBatch _spriteBatch;
+        protected SpriteBatch _spriteBatch;
         protected float _radius;
         private Game _game;
         protected float _mass;
@@ -49,6 +50,7 @@ namespace WhatIsAVector.Components
         public float Mass { get { return _mass; } }
         public float Radius { get { return _radius; } }
         public Color Color { get { return _color; } set { _color = value; } }
+        public float Angle { get { return _angle; } set { _angle = value; } }
 
         public void ApplyForce(Vector2 force)
         {

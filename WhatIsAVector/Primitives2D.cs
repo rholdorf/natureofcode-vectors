@@ -331,7 +331,6 @@ namespace WhatIsAVector
             // calculate the angle between the two vectors
             float angle = (float)Math.Atan2(point2.Y - point1.Y, point2.X - point1.X);
 
-            //DrawLine(spriteBatch, point1, distance, angle, color, thickness);
             spriteBatch.Draw(pixel,
                              point1,
                              null,

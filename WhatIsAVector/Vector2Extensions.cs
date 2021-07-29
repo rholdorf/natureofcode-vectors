@@ -33,5 +33,10 @@ namespace WhatIsAVector
             return vector;
         }
 
+        public static float Heading(this Vector2 vector)
+        {
+            return (float)Math.Atan2(vector.X, vector.Y);
+        }
+
     }
 }
