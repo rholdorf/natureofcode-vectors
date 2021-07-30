@@ -43,6 +43,10 @@ namespace WhatIsAVector.Components
         }
 
         public Vector2 Position { get { return _position; } }
+        
+        /// <summary>
+        /// Gives "instructions" to where the Position should be next.
+        /// </summary>
         public Vector2 Velocity { get { return _velocity; } set { _velocity = value; } }
         public Vector2 Acceleration { get { return _acceleration; } }
         public Vector2 Weigth { get { return _weight; } }

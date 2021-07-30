@@ -8,7 +8,6 @@ namespace WhatIsAVector.Components
 {
     public class AttractedTriangle : Mover
     {
-        private bool _popped;
         private float _halfRadius;
 
         public AttractedTriangle(
@@ -28,18 +27,16 @@ namespace WhatIsAVector.Components
             base.Initialize();
         }
 
-        public bool Popped { get { return _popped; } set { _popped = value; } }
-
         public override void Update(GameTime gameTime)
         {
-            if (_popped)
-                return;
-
             _velocity += _acceleration;
             _position += _velocity;
             // reset acceleration, once applyed
             _acceleration.X = 0;
             _acceleration.Y = 0;
+
+            _angle = _velocity.Heading();
+            //_angle += 0.00f;
 
             base.Update(gameTime);
         }
@@ -47,11 +44,22 @@ namespace WhatIsAVector.Components
         public override void Draw(GameTime gameTime)
         {
             _spriteBatch.Begin();
+            //Matrix translationMatrix = Matrix.CreateTranslation(_position.X, _position.Y, 0f);
+            //_spriteBatch.Begin(transformMatrix: translationMatrix);
+
+            var foo = _position.Copy();
+            //foo.Rotate(_angle);
+
 
             var vS = new Vector2[3];
-            vS[0] = new Vector2(_position.X - _radius, _position.Y - _halfRadius);
-            vS[1] = new Vector2(_position.X - _radius, _position.Y + _halfRadius);
-            vS[2] = new Vector2(_position.X + Radius, Position.Y);
+            vS[0] = new Vector2(foo.X - _radius, foo.Y - _halfRadius);
+            vS[1] = new Vector2(foo.X - _radius, foo.Y + _halfRadius);
+            vS[2] = new Vector2(foo.X + Radius, foo.Y);
+
+
+            vS[0].Rotate(_angle);
+            vS[1].Rotate(_angle);
+            vS[2].Rotate(_angle);
 
             _spriteBatch.DrawLine(vS[0], vS[2], _color, 1f);
             _spriteBatch.DrawLine(vS[1], vS[2], _color, 1f);
@@ -61,5 +69,7 @@ namespace WhatIsAVector.Components
 
             //base.Draw(gameTime);
         }
+
+
     }
 }

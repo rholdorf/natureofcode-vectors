@@ -62,7 +62,7 @@ namespace WhatIsAVector
             //AddBallDrag(5);
 
             //AddAttractor(50);
-            AddAttractorTriangle(5);
+            AddAttractorTriangle(50);
 
             //Components.Add(new SpinningRectangle(this, Color.White, new Rectangle(0, 0, 128, 64), WIDTH, HEIGHT));
 
