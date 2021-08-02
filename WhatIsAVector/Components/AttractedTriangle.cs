@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -8,7 +6,9 @@ namespace WhatIsAVector.Components
 {
     public class AttractedTriangle : Mover
     {
-        private float _halfRadius;
+        private readonly Texture2D _texture;
+        private Vector2 _centerPoint;
+        private float _scale;
 
         public AttractedTriangle(
             Game game,
@@ -16,14 +16,17 @@ namespace WhatIsAVector.Components
             Vector2 position,
             float mass,
             float screenWidth,
-            float screenHeight)
+            float screenHeight,
+            Texture2D texture)
             : base(game, color, position, (float)Math.Sqrt(mass), mass, screenWidth, screenHeight)
         {
+            _texture = texture;
         }
 
         public override void Initialize()
         {
-            _halfRadius = _radius / 2f;
+            _centerPoint = new Vector2(_texture.Width / 2, _texture.Height / 2);
+            _scale =  2f/_radius;
             base.Initialize();
         }
 
@@ -36,40 +39,14 @@ namespace WhatIsAVector.Components
             _acceleration.Y = 0;
 
             _angle = _velocity.Heading();
-            //_angle += 0.00f;
-
             base.Update(gameTime);
         }
 
         public override void Draw(GameTime gameTime)
         {
             _spriteBatch.Begin();
-            //Matrix translationMatrix = Matrix.CreateTranslation(_position.X, _position.Y, 0f);
-            //_spriteBatch.Begin(transformMatrix: translationMatrix);
-
-            var foo = _position.Copy();
-            //foo.Rotate(_angle);
-
-
-            var vS = new Vector2[3];
-            vS[0] = new Vector2(foo.X - _radius, foo.Y - _halfRadius);
-            vS[1] = new Vector2(foo.X - _radius, foo.Y + _halfRadius);
-            vS[2] = new Vector2(foo.X + Radius, foo.Y);
-
-
-            vS[0].Rotate(_angle);
-            vS[1].Rotate(_angle);
-            vS[2].Rotate(_angle);
-
-            _spriteBatch.DrawLine(vS[0], vS[2], _color, 1f);
-            _spriteBatch.DrawLine(vS[1], vS[2], _color, 1f);
-            _spriteBatch.DrawLine(vS[0], vS[1], _color, 1f);
-
+            _spriteBatch.Draw(_texture, _position, null, _color, _angle, _centerPoint, _scale, SpriteEffects.None, 1);
             _spriteBatch.End();
-
-            //base.Draw(gameTime);
         }
-
-
     }
 }

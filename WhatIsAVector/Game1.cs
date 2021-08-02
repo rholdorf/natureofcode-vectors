@@ -20,6 +20,7 @@ namespace WhatIsAVector
         private const int HEIGHT = 600;
 
         private SpriteFont _hudFont;
+        private Texture2D _arrow;
 
         private readonly Perlin _perlin = new();
         private readonly Random _random = new();
@@ -39,6 +40,8 @@ namespace WhatIsAVector
         protected override void Initialize()
         {
             _hudFont = Content.Load<SpriteFont>("Fonts/Hud");
+            _arrow = Content.Load<Texture2D>("Shapes/arrow");
+
 
             _graphics.PreferredBackBufferWidth = WIDTH;
             _graphics.PreferredBackBufferHeight = HEIGHT;
@@ -85,7 +88,8 @@ namespace WhatIsAVector
                     position: new Vector2(_random.Next(0, WIDTH / 4 * 3), _random.Next(0, HEIGHT / 4 * 3)),
                     mass: (float)_random.Next(50, 500),
                     screenWidth: WIDTH,
-                    screenHeight: HEIGHT);
+                    screenHeight: HEIGHT,
+                    texture: _arrow);
                 attracted.Velocity = new Vector2().Randomize(_random);
                 Components.Add(attracted);
                 attracteds.Add(attracted);
@@ -193,6 +197,8 @@ namespace WhatIsAVector
                 _graphics = null;
                 _spriteBatch?.Dispose();
                 _spriteBatch = null;
+                _arrow?.Dispose();
+                _arrow = null;
                 _disposed = true;
             }
 
