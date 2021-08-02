@@ -21,6 +21,7 @@ namespace WhatIsAVector.Components
         protected float _radius;
         private Game _game;
         protected float _mass;
+        protected bool _destroyed;
 
         public Mover(
             Game game,
@@ -56,6 +57,8 @@ namespace WhatIsAVector.Components
         public Color Color { get { return _color; } set { _color = value; } }
         public float Angle { get { return _angle; } set { _angle = value; } }
 
+        public bool Destroyed { get { return _destroyed; } }
+
         public void ApplyForce(Vector2 force)
         {
             var forceDivByMass = Vector2.Divide(force, _mass);
@@ -78,6 +81,12 @@ namespace WhatIsAVector.Components
             _spriteBatch.End();
 
             base.Draw(gameTime);
+        }
+
+        public void Destroy()
+        {
+            Game.Components.Remove(this);
+            _destroyed = true;
         }
 
         protected override void Dispose(bool disposing)

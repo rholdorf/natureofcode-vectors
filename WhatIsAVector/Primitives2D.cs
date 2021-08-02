@@ -107,25 +107,6 @@ namespace WhatIsAVector
             return points;
         }
 
-        ///// <summary>
-        ///// Draws a list of connecting points
-        ///// </summ
-        ///// <param name="spriteBatch">The destination drawing surface</param>
-        ///// /// <param name="position">Where to position the points</param>
-        ///// <param name="points">The points to connect with lines</param>
-        ///// <param name="color">The color to use</param>
-        ///// <param name="thickness">The thickness of the lines</param>
-        //public static void DrawPoints(this SpriteBatch spriteBatch, Vector2 position, List<Vector2> points, Color color, float thickness)
-        //{
-        //    if (points.Count < 2)
-        //        return;
-
-        //    for (int i = 1; i < points.Count; i++)
-        //    {
-        //        DrawLine(spriteBatch, points[i - 1] + position, points[i] + position, color, thickness);
-        //    }
-        //}
-
         /// <summary>
         /// Draws a filled rectangle
         /// </summary>
@@ -150,7 +131,6 @@ namespace WhatIsAVector
             spriteBatch.Draw(pixel, rect, null, color, angle, Vector2.Zero, SpriteEffects.None, 0);
         }
 
-
         /// <summary>
         /// Draws a filled rectangle
         /// </summary>
@@ -162,7 +142,6 @@ namespace WhatIsAVector
         {
             FillRectangle(spriteBatch, location, size, color, 0.0f);
         }
-
 
         /// <summary>
         /// Draws a filled rectangle
@@ -186,7 +165,6 @@ namespace WhatIsAVector
                              0);
         }
 
-
         /// <summary>
         /// Draws a filled rectangle
         /// </summary>
@@ -200,7 +178,6 @@ namespace WhatIsAVector
         {
             FillRectangle(spriteBatch, new Vector2(x, y), new Vector2(w, h), color, 0.0f);
         }
-
 
         /// <summary>
         /// Draws a filled rectangle
@@ -228,7 +205,6 @@ namespace WhatIsAVector
             DrawRectangle(spriteBatch, rect, color, 1.0f);
         }
 
-
         /// <summary>
         /// Draws a rectangle with the thickness provided
         /// </summary>
@@ -247,7 +223,6 @@ namespace WhatIsAVector
             DrawLine(spriteBatch, new Vector2(rect.X, rect.Bottom), new Vector2(rect.Right, rect.Bottom), color, thickness); // bottom
             DrawLine(spriteBatch, new Vector2(rect.Right + 1f, rect.Y), new Vector2(rect.Right + 1f, rect.Bottom + thickness), color, thickness); // right
         }
-
 
         /// <summary>
         /// Draws a rectangle with the thickness provided
@@ -473,7 +448,6 @@ namespace WhatIsAVector
         public static void DrawArc(this SpriteBatch spriteBatch, Vector2 center, float radius, int sides, float startingAngle, float radians, Color color, float thickness)
         {
             List<Vector2> arc = CreateArc(radius, sides, startingAngle, radians);
-            //List<Vector2> arc = CreateArc2(radius, sides, startingAngle, degrees);
             DrawPoints(spriteBatch, center, arc, color, thickness);
         }
     }

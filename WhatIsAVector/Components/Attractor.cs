@@ -5,10 +5,8 @@ namespace WhatIsAVector.Components
 {
     public class Attractor : Mover
     {
-        private float G = 1f; // gravitational constant
-
+        private readonly float G = 1f; // gravitational constant
         private readonly IMover[] _attracteds;
-        private float _doubleRadius;
 
         public Attractor(
             Game game,
@@ -23,28 +21,22 @@ namespace WhatIsAVector.Components
             _attracteds = attracteds;
         }
 
-        public override void Initialize()
-        {
-            _doubleRadius = _radius * 2;
-            base.Initialize();
-        }
-
         private void Attract(IMover attracted)
         {
             var force = Vector2.Subtract(_position, attracted.Position);
             var distance = force.Length();
-            if (distance > _doubleRadius)
+            if (distance > _radius)
             {
                 var distanceSquared = distance * distance;
                 var magnitude = G * (_mass * attracted.Mass) / distanceSquared;
                 force.SetMagnitude(magnitude);
                 attracted.ApplyForce(force);
-                attracted.Color = Color.White;
             }
             else
             {
                 // collided
-                attracted.Color = Color.Red;
+                //_mass += attracted.Mass;
+                attracted.Destroy();
             }
         }
 
@@ -53,6 +45,9 @@ namespace WhatIsAVector.Components
             for (int i = 0; i < _attracteds.Length; i++)
             {
                 var attracted = _attracteds[i];
+                if (attracted.Destroyed)
+                    continue;
+
                 Attract(attracted);
             }
 

@@ -40,7 +40,7 @@ namespace WhatIsAVector
         protected override void Initialize()
         {
             _hudFont = Content.Load<SpriteFont>("Fonts/Hud");
-            _arrow = Content.Load<Texture2D>("Shapes/arrow");
+            _arrow = Content.Load<Texture2D>("Shapes/arrow_w");
 
 
             _graphics.PreferredBackBufferWidth = WIDTH;
@@ -65,7 +65,7 @@ namespace WhatIsAVector
             //AddBallDrag(5);
 
             //AddAttractor(50);
-            AddAttractorTriangle(50);
+            AddAttractorTriangle(10);
 
             //Components.Add(new SpinningRectangle(this, Color.White, new Rectangle(0, 0, 128, 64), WIDTH, HEIGHT));
 
@@ -84,7 +84,7 @@ namespace WhatIsAVector
             {
                 var attracted = new AttractedTriangle(
                     game: this,
-                    color: Color.Orange,
+                    color: new Color(_random.Next(127, 256), _random.Next(127, 256), _random.Next(127, 256)),
                     position: new Vector2(_random.Next(0, WIDTH / 4 * 3), _random.Next(0, HEIGHT / 4 * 3)),
                     mass: (float)_random.Next(50, 500),
                     screenWidth: WIDTH,
@@ -114,7 +114,7 @@ namespace WhatIsAVector
                 var attracted = new Attracted(
                     game: this,
                     color: Color.Orange,
-                    position: new Vector2(_random.Next(0, WIDTH/4*3), _random.Next(0, HEIGHT/4*3)),
+                    position: new Vector2(_random.Next(0, WIDTH / 4 * 3), _random.Next(0, HEIGHT / 4 * 3)),
                     mass: (float)_random.Next(50, 500),
                     screenWidth: WIDTH,
                     screenHeight: HEIGHT);
@@ -177,13 +177,19 @@ namespace WhatIsAVector
             base.Update(gameTime);
         }
 
+        private int ccc = 0;
         protected override void Draw(GameTime gameTime)
         {
-             _graphics.GraphicsDevice.Clear(Color.CornflowerBlue);
+            if (ccc < 2)
+            {
+                _graphics.GraphicsDevice.Clear(Color.Black);
+                ccc++;
+            }
+
             //_spriteBatch.Begin(transformMatrix: _translationMatrix);
-            //_spriteBatch.Begin();
-            //_spriteBatch.FillRectangle(0, 0, WIDTH, HEIGHT, _backgroundColor); // fade effect
-            //_spriteBatch.End();
+            _spriteBatch.Begin();
+            _spriteBatch.FillRectangle(0, 0, WIDTH, HEIGHT, _backgroundColor); // fade effect
+            _spriteBatch.End();
 
             base.Draw(gameTime);
         }

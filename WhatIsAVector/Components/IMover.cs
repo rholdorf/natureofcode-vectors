@@ -16,5 +16,7 @@ namespace WhatIsAVector.Components
         void ApplyForce(Vector2 force);
         void ApplyFriction();
         void Draw(GameTime gameTime);
+        void Destroy();
+        bool Destroyed { get; }
     }
 }
