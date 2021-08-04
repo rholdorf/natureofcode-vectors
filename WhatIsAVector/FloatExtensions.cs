@@ -9,58 +9,55 @@ namespace WhatIsAVector
         /// Otherwise the value remains the same.
         /// </summary>
         /// <param name="value"></param>
-        /// <param name="min"></param>
-        /// <param name="max"></param>
-        public static void Clamp(ref this float value, float min, float max)
+        /// <param name="low"></param>
+        /// <param name="high"></param>
+        public static float Clamp(ref this float value, float low, float high)
         {
-            if (min > max)
-                throw new ArgumentOutOfRangeException(nameof(min), "min value must be less than max");
-
-            if (value < min)
+            if (value < low)
             {
-                value = min;
-                return;
+                value = low;
+                return low;
             }
 
-            if (value > max)
+            if (value > high)
             {
-                value = max;
-                return;
+                value = high;
+                return high;
             }
 
             // otherwise value remains the same
+            return value;
         }
 
         /// <summary>
-        /// Returns a correlated value to the current value. According to the
-        /// specified minFrom and maxFrom it will determine a corresponding
-        /// value in the range of the minTo up to maxTo.
+        /// Re-maps a number from one range to another.
         /// </summary>
-        /// <param name="value">The value to correlate, must be in the range of minFrom and maxFrom.</param>
-        /// <param name="minFrom">The inclusive lower bound of the "from" range. Must be less than the maxFrom.</param>
-        /// <param name="maxFrom">The inclusive upper bound of the "from" range. Must be grater than the minFrom.</param>
-        /// <param name="minTo">The inclusive lower bound of the "to" range. Must be less than the maxTo.</param>
-        /// <param name="maxTo">The inclusive upper bound of the "to" range. Must be greater than the minTo.</param>
+        /// <param name="n">The value to correlate, must be in the range of minFrom and maxFrom.</param>
+        /// <param name="start1">The inclusive lower bound of the "from" range. Must be less than the maxFrom.</param>
+        /// <param name="stop1">The inclusive upper bound of the "from" range. Must be grater than the minFrom.</param>
+        /// <param name="start2">The inclusive lower bound of the "to" range. Must be less than the maxTo.</param>
+        /// <param name="stop2">The inclusive upper bound of the "to" range. Must be greater than the minTo.</param>
         /// <returns></returns>
-        public static float Map(this float value, float minFrom, float maxFrom, float minTo, float maxTo)
+        public static float Map(this float n, float start1, float stop1, float start2, float stop2, bool withinBounds = false)
         {
-            if (value < minFrom || value > maxFrom)
-                throw new ArgumentOutOfRangeException(nameof(value), "The " + nameof(value) + " must be greater than or equals to " + nameof(minFrom) + " and less than or equals to " + nameof(maxFrom) + ".");
+            var a = n - start1;
+            var b = stop1 - start1;
+            var c = stop2 - start2;
+            var d = start2;
 
-            if (maxFrom < minFrom)
-                throw new ArgumentOutOfRangeException(nameof(minFrom), "must be less than " + nameof(maxFrom) + ".");
+            var ret = (a / b * c) + d;
+            if (!withinBounds)
+                return ret;
 
-            if (maxTo < minTo)
-                throw new ArgumentOutOfRangeException(nameof(minTo), "must be less than " + nameof(maxTo) + ".");
+            if (start2 < stop2)
+                return Constrain(ret, start2, stop2);
 
-            var fromHowMany = maxFrom - minFrom;
-            var middle = fromHowMany / 2f;
-            var offset = middle + value;
-            var percent = offset / fromHowMany;
-            var toHowMany = maxTo - minTo;
-            var ret = toHowMany * percent;
-            ret.Clamp(minTo, maxTo);
-            return ret;
+            return Constrain(ret, stop2, start2);
+        }
+
+        public static float Constrain(this float value, float low, float high)
+        {
+            return Math.Max(Math.Min(value, high), low);
         }
     }
 }
