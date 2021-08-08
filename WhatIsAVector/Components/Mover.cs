@@ -93,7 +93,7 @@ namespace WhatIsAVector.Components
         {
             if (disposing && _disposed)
             {
-                _spriteBatch.Dispose();
+                _spriteBatch?.Dispose();
                 _spriteBatch = null;
                 _game = null;
                 _disposed = true;

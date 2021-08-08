@@ -69,14 +69,8 @@ namespace WhatIsAVector
 
             //Components.Add(new SpinningRectangle(this, Color.White, new Rectangle(0, 0, 128, 64), WIDTH, HEIGHT));
 
-            Components.Add(new Wave(
-                game: this,
-                amplitude: 50,
-                period: 300,
-                phase: 10,
-                screenWidth: WIDTH,
-                screenHeight: HEIGHT,
-                color: Color.White));
+            //Components.Add(new Wave(game: this, amplitude: 50, period: 300, phase: 10, screenWidth: WIDTH, screenHeight: HEIGHT, color: Color.White));
+            Components.Add(new Pendulum(this, Color.White, new Vector2(WIDTH / 4 * 3, HEIGHT / 2), WIDTH, HEIGHT));
 
             Components.Add(new FpsCounter(this, _hudFont, new Vector2(5, 5), Color.Yellow));
             _translationMatrix = Matrix.CreateTranslation(WIDTH / 2f, HEIGHT / 2f, 0f);

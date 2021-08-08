@@ -15,22 +15,31 @@ namespace WhatIsAVector.Components
         private float _tau = (float)Math.PI * 2;
         private readonly float _screenWidth;
         private readonly float _screenHeight;
-        private float _halfHight;
+        private float _halfHeight;
         private SpriteBatch _spriteBatch;
         private Color _color;
+        private Texture2D _texture;
+        private Game _game;
 
 
         public Wave(Game game, float amplitude, float period, float phase, float screenWidth, float screenHeight, Color color)
             : base(game)
         {
+            _game = game;
             _amplitude = amplitude;
             _period = period;
             _phase = phase;
             _spriteBatch = new SpriteBatch(game.GraphicsDevice);
             _screenWidth = screenWidth;
             _screenHeight = screenHeight;
-            _halfHight = _screenHeight / 2;
+            _halfHeight = _screenHeight / 2;
             _color = color;
+        }
+
+        public override void Initialize()
+        {
+            _texture = _game.Content.Load<Texture2D>("Shapes/circle_border");
+            base.Initialize();
         }
 
         private float Calculate(float x)
@@ -49,8 +58,8 @@ namespace WhatIsAVector.Components
             _spriteBatch.Begin();
             for (int x = 0; x < _screenWidth; x += 10)
             {
-                float y = Calculate(x);
-                _spriteBatch.DrawCircle(x, y + _halfHight, 5, 8, _color);
+                float y = Calculate(x) + _halfHeight;
+                _spriteBatch.Draw(_texture, new Rectangle(x, (int)y, 20, 20), _color);
             }
             _spriteBatch.End();
 
@@ -61,8 +70,11 @@ namespace WhatIsAVector.Components
         {
             if (disposing && _disposed)
             {
-                _spriteBatch.Dispose();
+                _spriteBatch?.Dispose();
                 _spriteBatch = null;
+                _texture?.Dispose();
+                _texture = null;
+
                 _disposed = true;
             }
 
