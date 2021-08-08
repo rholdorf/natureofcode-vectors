@@ -65,9 +65,18 @@ namespace WhatIsAVector
             //AddBallDrag(5);
 
             //AddAttractor(50);
-            AddAttractorTriangle(10);
+            //AddAttractorTriangle(10);
 
             //Components.Add(new SpinningRectangle(this, Color.White, new Rectangle(0, 0, 128, 64), WIDTH, HEIGHT));
+
+            Components.Add(new Wave(
+                game: this,
+                amplitude: 50,
+                period: 300,
+                phase: 10,
+                screenWidth: WIDTH,
+                screenHeight: HEIGHT,
+                color: Color.White));
 
             Components.Add(new FpsCounter(this, _hudFont, new Vector2(5, 5), Color.Yellow));
             _translationMatrix = Matrix.CreateTranslation(WIDTH / 2f, HEIGHT / 2f, 0f);
@@ -180,16 +189,16 @@ namespace WhatIsAVector
         private int ccc = 0;
         protected override void Draw(GameTime gameTime)
         {
-            if (ccc < 2)
-            {
-                _graphics.GraphicsDevice.Clear(Color.Black);
-                ccc++;
-            }
+            //if (ccc < 2)
+            //{
+            _graphics.GraphicsDevice.Clear(Color.Black);
+            //    ccc++;
+            //}
 
             //_spriteBatch.Begin(transformMatrix: _translationMatrix);
-            _spriteBatch.Begin();
-            _spriteBatch.FillRectangle(0, 0, WIDTH, HEIGHT, _backgroundColor); // fade effect
-            _spriteBatch.End();
+            //_spriteBatch.Begin();
+            //_spriteBatch.FillRectangle(0, 0, WIDTH, HEIGHT, _backgroundColor); // fade effect
+            //_spriteBatch.End();
 
             base.Draw(gameTime);
         }
