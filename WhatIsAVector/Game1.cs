@@ -25,11 +25,28 @@ namespace WhatIsAVector
         private Color _backgroundColor = new Color(0, 0, 0, 10);
         private Vector3 _camTarget;
         private Vector3 _camPosition;
+
+        /// <summary>
+        /// Console games generally set of a field of view of about 60 degrees, while PC games often set the field of view higher, in the 80-100 degree range. The difference is generally due to the size of the screen viewed and the distance from it.  The higher the field of view, the more of the scene that will be rendered on screen.
+        /// </summary>
+        private readonly float _fieldOfViewDegrees = 60f;
+
+        /// <summary>
+        /// Camera Lens. The Projection Matrix is used to convert 3D view space to 2D. In a nutshell, this is your actual camera lens and is created by specifying calling CreatePerspectiveFieldOfView() or CreateOrthographicFieldOfView().  With Orthographic projection, the size of things remain the same regardless to their depth within the scene.  For Perspective rendering it simulates the way an eye works, by rendering things smaller as they get further away.  As a general rule, for a 2D game you use Orthographic, while in 3D you use Perspective projection.  When creating a Perspective view we specify the field of view ( think of this as the degrees of visibility from the center of your eye view ), the aspect ratio ( the proportions between width and height of the display ), near and far plane ( minimum and maximum depth to render with camera… basically the range of the camera ).  These values all go together to calculate something called the view frustum, which can be thought of as a pyramid in 3D space representing what is currently available.
+        /// </summary>
         private Matrix _projectionMatrix;
+
+        /// <summary>
+        /// Camera Location. The View Matrix is used to transform coordinates from World to View space. A much easier way to envision the View matrix is it represents the position and orientation of the camera.  It is created by passing in the camera location, where the camera is pointing and by specifying which axis represents Up in the universe.  XNA uses a Y-up orientation, which is important to be aware of when creating 3D models.  Blender by default treats Z as the up/down axis, while 3D Studio MAX uses the Y-axis as Up.
+        /// </summary>
         private Matrix _viewMatrix;
+
+        /// <summary>
+        /// Object Position / Orientation in 3D scene. The World matrix is used to position your entity within the scene. Essentially this is your position in the 3D world.  In addition to positional information, the World matrix can also represent an objects orientation
+        /// </summary>
         private Matrix _worldMatrix;
         private Model _model;
-        private bool _orbit;
+        private bool _cameraOrbiting = true;
         private Matrix _rotationMatrix = Matrix.CreateRotationY(MathHelper.ToRadians(1f));
 
         public Game1()
@@ -80,7 +97,7 @@ namespace WhatIsAVector
             _camTarget = new Vector3(0f, 0f, 0f);
             _camPosition = new Vector3(0f, 0f, -5);
             _projectionMatrix = Matrix.CreatePerspectiveFieldOfView(
-                MathHelper.ToRadians(45f), 
+                MathHelper.ToRadians(_fieldOfViewDegrees), 
                 _graphics.GraphicsDevice.Viewport.AspectRatio, 
                 1f, 
                 1000f);
@@ -221,9 +238,9 @@ namespace WhatIsAVector
                 _camPosition.Z -= 0.1f;
 
             if (keyboardState.IsKeyDown(Keys.Space))
-                _orbit = !_orbit;
+                _cameraOrbiting = !_cameraOrbiting;
 
-            if (_orbit)
+            if (_cameraOrbiting)
                 _camPosition = Vector3.Transform(_camPosition, _rotationMatrix);
 
             _viewMatrix = Matrix.CreateLookAt(_camPosition, _camTarget, Vector3.Up);
@@ -253,8 +270,8 @@ namespace WhatIsAVector
             {
                 foreach (BasicEffect effect in mesh.Effects)
                 {
-                    //effect.EnableDefaultLighting();
-                    effect.AmbientLightColor = new Vector3(1f, 0, 0);
+                    effect.EnableDefaultLighting();
+                    effect.AmbientLightColor = new Vector3(0f, 0f, 1f);
                     effect.View = _viewMatrix;
                     effect.World = _worldMatrix;
                     effect.Projection = _projectionMatrix;
