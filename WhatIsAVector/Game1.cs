@@ -15,20 +15,22 @@ namespace WhatIsAVector
         private SpriteBatch _spriteBatch;
         //private RenderTarget2D _screenBuffer;
         private Matrix _translationMatrix;
-
         private const int WIDTH = 800;
         private const int HEIGHT = 600;
-
         private SpriteFont _hudFont;
         private Texture2D _arrow;
-
         private readonly Perlin _perlin = new();
         private readonly Random _random = new();
         private readonly OpenSimplex2F _noise = new(1);
-
         private Color _backgroundColor = new Color(0, 0, 0, 10);
-
-
+        private Vector3 _camTarget;
+        private Vector3 _camPosition;
+        private Matrix _projectionMatrix;
+        private Matrix _viewMatrix;
+        private Matrix _worldMatrix;
+        private Model _model;
+        private bool _orbit;
+        private Matrix _rotationMatrix = Matrix.CreateRotationY(MathHelper.ToRadians(1f));
 
         public Game1()
         {
@@ -41,7 +43,6 @@ namespace WhatIsAVector
         {
             _hudFont = Content.Load<SpriteFont>("Fonts/Hud");
             _arrow = Content.Load<Texture2D>("Shapes/arrow_w");
-
 
             _graphics.PreferredBackBufferWidth = WIDTH;
             _graphics.PreferredBackBufferHeight = HEIGHT;
@@ -70,10 +71,22 @@ namespace WhatIsAVector
             //Components.Add(new SpinningRectangle(this, Color.White, new Rectangle(0, 0, 128, 64), WIDTH, HEIGHT));
 
             //Components.Add(new Wave(game: this, amplitude: 50, period: 300, phase: 10, screenWidth: WIDTH, screenHeight: HEIGHT, color: Color.White));
-            Components.Add(new Pendulum(this, Color.White, new Vector2(WIDTH / 4 * 3, HEIGHT / 2), WIDTH, HEIGHT));
+            //Components.Add(new Pendulum(this, Color.White, new Vector2(WIDTH / 4 * 3, HEIGHT / 2), WIDTH, HEIGHT));
 
             Components.Add(new FpsCounter(this, _hudFont, new Vector2(5, 5), Color.Yellow));
             _translationMatrix = Matrix.CreateTranslation(WIDTH / 2f, HEIGHT / 2f, 0f);
+
+            //Setup Camera
+            _camTarget = new Vector3(0f, 0f, 0f);
+            _camPosition = new Vector3(0f, 0f, -5);
+            _projectionMatrix = Matrix.CreatePerspectiveFieldOfView(
+                MathHelper.ToRadians(45f), 
+                _graphics.GraphicsDevice.Viewport.AspectRatio, 
+                1f, 
+                1000f);
+            _viewMatrix = Matrix.CreateLookAt(_camPosition, _camTarget, new Vector3(0f, 1f, 0f));// Y up
+            _worldMatrix = Matrix.CreateWorld(_camTarget, Vector3.Forward, Vector3.Up);
+            _model = Content.Load<Model>("MonoCube/MonoCube");
 
             base.Initialize();
         }
@@ -177,6 +190,45 @@ namespace WhatIsAVector
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || keyboardState.IsKeyDown(Keys.Escape))
                 Exit();
 
+            if (keyboardState.IsKeyDown(Keys.Left))
+            {
+                _camPosition.X -= 0.1f;
+                _camTarget.X -= 0.1f;
+            }
+
+            if (keyboardState.IsKeyDown(Keys.Right))
+            {
+                _camPosition.X += 0.1f;
+                _camTarget.X += 0.1f;
+            }
+
+            if (keyboardState.IsKeyDown(Keys.Up))
+            {
+                _camPosition.Y -= 0.1f;
+                _camTarget.Y -= 0.1f;
+            }
+
+            if (keyboardState.IsKeyDown(Keys.Down))
+            {
+                _camPosition.Y += 0.1f;
+                _camTarget.Y += 0.1f;
+            }
+
+            if (keyboardState.IsKeyDown(Keys.OemPlus))
+                _camPosition.Z += 0.1f;
+
+            if (keyboardState.IsKeyDown(Keys.OemMinus))
+                _camPosition.Z -= 0.1f;
+
+            if (keyboardState.IsKeyDown(Keys.Space))
+                _orbit = !_orbit;
+
+            if (_orbit)
+                _camPosition = Vector3.Transform(_camPosition, _rotationMatrix);
+
+            _viewMatrix = Matrix.CreateLookAt(_camPosition, _camTarget, Vector3.Up);
+
+
             base.Update(gameTime);
         }
 
@@ -185,14 +237,30 @@ namespace WhatIsAVector
         {
             //if (ccc < 2)
             //{
-            _graphics.GraphicsDevice.Clear(Color.Black);
+            //    _graphics.GraphicsDevice.Clear(Color.Black);
             //    ccc++;
             //}
 
+            //_graphics.GraphicsDevice.Clear(Color.Black);
             //_spriteBatch.Begin(transformMatrix: _translationMatrix);
             //_spriteBatch.Begin();
             //_spriteBatch.FillRectangle(0, 0, WIDTH, HEIGHT, _backgroundColor); // fade effect
             //_spriteBatch.End();
+
+
+            GraphicsDevice.Clear(Color.Black);
+            foreach (ModelMesh mesh in _model.Meshes)
+            {
+                foreach (BasicEffect effect in mesh.Effects)
+                {
+                    //effect.EnableDefaultLighting();
+                    effect.AmbientLightColor = new Vector3(1f, 0, 0);
+                    effect.View = _viewMatrix;
+                    effect.World = _worldMatrix;
+                    effect.Projection = _projectionMatrix;
+                }
+                mesh.Draw();
+            }
 
             base.Draw(gameTime);
         }

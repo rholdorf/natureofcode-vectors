@@ -7,7 +7,6 @@ namespace WhatIsAVector.Components
     public class BallDrag : BouncingBall
     {
         private bool _disposed;
-        private SpriteBatch _spriteBatch;
         private readonly Rectangle _viscousArea;
         private readonly Color _viscousColor = new Color(15, 15, 15, 10);
 
