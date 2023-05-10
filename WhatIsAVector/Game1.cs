@@ -79,15 +79,15 @@ namespace WhatIsAVector
             //Components.Add(new RollingGraph1DOpenSimplexNoise(this, Color.Yellow, WIDTH, HEIGHT, _noise));
 
 
-            //AddBouncingBalls(5);
-            //AddBallDrag(5);
+            AddBouncingBalls(5);
+            AddBallDrag(5);
 
             //AddAttractor(50);
-            //AddAttractorTriangle(10);
+            AddAttractorTriangle(10);
 
             //Components.Add(new SpinningRectangle(this, Color.White, new Rectangle(0, 0, 128, 64), WIDTH, HEIGHT));
 
-            //Components.Add(new Wave(game: this, amplitude: 50, period: 300, phase: 10, screenWidth: WIDTH, screenHeight: HEIGHT, color: Color.White));
+            Components.Add(new Wave(game: this, amplitude: 50, period: 300, phase: 10, screenWidth: WIDTH, screenHeight: HEIGHT, color: Color.White));
             //Components.Add(new Pendulum(this, Color.White, new Vector2(WIDTH / 4 * 3, HEIGHT / 2), WIDTH, HEIGHT));
 
             Components.Add(new FpsCounter(this, _hudFont, new Vector2(5, 5), Color.Yellow));
