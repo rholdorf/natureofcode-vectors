@@ -104,14 +104,14 @@ namespace WhatIsAVector
 
             Primitives2D.Initialize(GraphicsDevice);
 
-            //Components.Add(new CreateTexture2DPerlinNoise(this, new Vector2(0, 0), Color.White, WIDTH / 2, HEIGHT / 2, _perlin));
-            //Components.Add(new CreateTexture2DOpenSimplexNoise(this, new Vector2(WIDTH / 2, 0), Color.White, WIDTH / 2, HEIGHT / 2, _noise));
+            Components.Add(new CreateTexture2DPerlinNoise(this, new Vector2(0, 0), Color.White, WIDTH / 2, HEIGHT / 2, _perlin));
+            Components.Add(new CreateTexture2DOpenSimplexNoise(this, new Vector2(WIDTH / 2, 0), Color.White, WIDTH / 2, HEIGHT / 2, _noise));
 
             Components.Add(new MovingCircle1DPerlinNoise(this, Color.White, new Vector2(WIDTH / 2, HEIGHT / 2), 20f, 1, WIDTH, HEIGHT, _perlin, _random));
             Components.Add(new MovingCircle1DOpenSimplexNoise(this, Color.Yellow, new Vector2(WIDTH / 2, HEIGHT / 2), 20f, 1, WIDTH, HEIGHT, _noise, _random));
 
-            //Components.Add(new RollingGraph1DPerlinNoise(this, Color.Red, WIDTH, HEIGHT, _perlin));
-            //Components.Add(new RollingGraph1DOpenSimplexNoise(this, Color.Yellow, WIDTH, HEIGHT, _noise));
+            Components.Add(new RollingGraph1DPerlinNoise(this, Color.Red, WIDTH, HEIGHT, _perlin));
+            Components.Add(new RollingGraph1DOpenSimplexNoise(this, Color.Yellow, WIDTH, HEIGHT, _noise));
 
             //AddBouncingBalls(5);
             //AddBallDrag(5);
@@ -237,61 +237,65 @@ namespace WhatIsAVector
         protected override void Update(GameTime gameTime)
         {
             var keyboardState = Keyboard.GetState();
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || keyboardState.IsKeyDown(Keys.Escape))
-                Exit();
 
-            if (keyboardState.IsKeyDown(Keys.Left))
+            if (keyboardState.GetPressedKeyCount() > 0)
             {
-                _camPosition.X -= 0.1f;
-                _camTarget.X -= 0.1f;
+                if (keyboardState.IsKeyDown(Keys.Escape))
+                    Exit();
+                
+                if (keyboardState.IsKeyDown(Keys.Left))
+                {
+                    _camPosition.X -= 0.1f;
+                    _camTarget.X -= 0.1f;
+                }
+
+                if (keyboardState.IsKeyDown(Keys.Right))
+                {
+                    _camPosition.X += 0.1f;
+                    _camTarget.X += 0.1f;
+                }
+
+                if (keyboardState.IsKeyDown(Keys.Up))
+                {
+                    _camPosition.Y -= 0.1f;
+                    _camTarget.Y -= 0.1f;
+                }
+
+                if (keyboardState.IsKeyDown(Keys.Down))
+                {
+                    _camPosition.Y += 0.1f;
+                    _camTarget.Y += 0.1f;
+                }
+
+                if (keyboardState.IsKeyDown(Keys.OemPlus))
+                    _camPosition.Z += 0.1f;
+
+                if (keyboardState.IsKeyDown(Keys.OemMinus))
+                    _camPosition.Z -= 0.1f;
+
+                if (keyboardState.IsKeyDown(Keys.Space))
+                    _cameraOrbiting = !_cameraOrbiting;
             }
-
-            if (keyboardState.IsKeyDown(Keys.Right))
-            {
-                _camPosition.X += 0.1f;
-                _camTarget.X += 0.1f;
-            }
-
-            if (keyboardState.IsKeyDown(Keys.Up))
-            {
-                _camPosition.Y -= 0.1f;
-                _camTarget.Y -= 0.1f;
-            }
-
-            if (keyboardState.IsKeyDown(Keys.Down))
-            {
-                _camPosition.Y += 0.1f;
-                _camTarget.Y += 0.1f;
-            }
-
-            if (keyboardState.IsKeyDown(Keys.OemPlus))
-                _camPosition.Z += 0.1f;
-
-            if (keyboardState.IsKeyDown(Keys.OemMinus))
-                _camPosition.Z -= 0.1f;
-
-            if (keyboardState.IsKeyDown(Keys.Space))
-                _cameraOrbiting = !_cameraOrbiting;
 
             if (_cameraOrbiting)
                 _camPosition = Vector3.Transform(_camPosition, _rotationMatrix);
 
             _viewMatrix = Matrix.CreateLookAt(_camPosition, _camTarget, Vector3.Up);
 
-
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Black);
+            GraphicsDevice.Clear(_backgroundColor);
             
             // Draw the 3d model
-            foreach (var mesh in _model.Meshes)
+            for(var i=0; i<_model.Meshes.Count; i++)
             {
-                foreach (var effect1 in mesh.Effects)
+                var mesh = _model.Meshes[i];
+                for (var j = 0; j< mesh.Effects.Count; j++)
                 {
-                    var effect = (BasicEffect)effect1;
+                    var effect = (BasicEffect)mesh.Effects[j];
                     effect.EnableDefaultLighting();
                     effect.AmbientLightColor = new Vector3(0f, 0f, 1f);
                     effect.View = _viewMatrix;

@@ -8,23 +8,23 @@ namespace WhatIsAVector.Components
     /// <summary>
     /// A game component that counts FPS and UPS, also gives other useful performance information.
     /// </summary>
-    public class FpsCounter : DrawableGameComponent
+    public sealed class FpsCounter : DrawableGameComponent
     {
         private bool _disposed;
-        private const int REFRESEHS_PER_SEC = 4;  // how many times do we calculate FPS & UPS every second
-        private readonly TimeSpan _refreshTime = TimeSpan.FromMilliseconds(1000 / REFRESEHS_PER_SEC);
+        private const int SAMPLES_PER_SEC = 4;  // how many times do we calculate FPS & UPS every second
+        private readonly TimeSpan _refreshTime = TimeSpan.FromMilliseconds(1000 / SAMPLES_PER_SEC);
         private TimeSpan _elapsedTime = TimeSpan.Zero;
-        private static int _fps = 0;
-        private static int _ups = 0;
-        private static int _oldFps = 0;
-        private static int _oldUps = 0;
-        private int _frameCounter = 0;
-        private int _updateCounter = 0;
+        private int _fps;
+        private int _ups;
+        private int _oldFps;
+        private int _oldUps;
+        private int _frameCounter;
+        private int _updateCounter;
         private SpriteBatch _spriteBatch;
         private readonly SpriteFont _font;
-        private Vector2 _position;
-        private Color _color;
-        private Color _shadow = new(0, 0, 0, 100);
+        private readonly Vector2 _position;
+        private readonly Color _color;
+        private readonly Color _shadow = new(0, 0, 0, 100);
         private readonly StringBuilder _outputSb = new();
         private string _fpsUps = string.Empty;
 
@@ -38,7 +38,7 @@ namespace WhatIsAVector.Components
         }
 
         /// <summary>
-        /// Allows performace monitor to calculate update rate.
+        /// Allows performance monitor to calculate update rate.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Update(GameTime gameTime)
@@ -49,8 +49,8 @@ namespace WhatIsAVector.Components
             if (_elapsedTime > _refreshTime)
             {
                 _elapsedTime -= _refreshTime;
-                _fps = _frameCounter * REFRESEHS_PER_SEC;
-                _ups = _updateCounter * REFRESEHS_PER_SEC;
+                _fps = _frameCounter * SAMPLES_PER_SEC;
+                _ups = _updateCounter * SAMPLES_PER_SEC;
                 _frameCounter = 0;
                 _updateCounter = 0;
 
@@ -59,7 +59,7 @@ namespace WhatIsAVector.Components
                     _oldFps = _fps;
                     _oldUps = _ups;
                     _outputSb.Clear();
-                    _outputSb.Append("F");
+                    _outputSb.Append('F');
                     _outputSb.Append(_fps);
                     _outputSb.Append(" U");
                     _outputSb.Append(_ups);

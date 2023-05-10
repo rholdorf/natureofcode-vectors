@@ -5,13 +5,12 @@ namespace Noise
     // code by https://github.com/formalatist/Perlin
     public abstract class Perlin<GradientType>
     {
-
-        /// <summar>
+        /// <summary>
         /// The function we use to smooth the interpolation between the
         /// different corners of the cube. With a linear interpolation we'll
         /// get hard edges.
         /// </summary>
-        private readonly Func<float, float> SmoothingFunction;
+        private readonly Func<float, float> _smoothingFunction;
 
         /// <summary>
         /// PermutationTable, shortened for readability
@@ -21,7 +20,7 @@ namespace Noise
         /// <summary>
         /// The defaultPermutationTable is 512 ints long and an contains values 0..255
         /// </summary>
-        private static readonly int[] defaultPermutationTable = {
+        private static readonly int[] DefaultPermutationTable = {
             151,160,137,91,90,15,131,13,201,95,96,53,194,233,7,225,140,36,103,
             30,69,142,8,99,37,240,21,10,23,190,6,148,247,120,234,75,0,26,197,
             62,94,252,219,203,117,35,11,32,57,177,33,88,237,149,56,87,174,20,
@@ -49,24 +48,25 @@ namespace Noise
             218,246,97,228,251,34,242,193,238,210,144,12,191,179,162,241,81,51,
             145,235,249,14,239,107,49,192,214,31,181,199,106,157,184,84,204,176,
             115,121,50,45,127,4,150,254,138,236,205,93,222,114,67,29,24,72,243,
-            141,128,195,78,66,215,61,156,180};
+            141,128,195,78,66,215,61,156,180
+        };
 
-        private readonly GradientType[] gradients;
+        private readonly GradientType[] _gradients;
 
         /// <summary>
         /// Performs the dot product (inner product) of two 3D vectors where one of the vectors is stored in the GradientType type.
         /// </summary>
-        private readonly Func<GradientType, float, float, float, float> Dot;
+        private readonly Func<GradientType, float, float, float, float> _dot;
 
         protected Perlin(
             GradientType[] gradients,
             Func<GradientType, float, float, float, float> dot,
             Func<float, float> smoothingFunction)
         {
-            this.gradients = gradients;
-            this.Dot = dot;
-            this.SmoothingFunction = smoothingFunction;
-            PT = defaultPermutationTable;
+            _gradients = gradients;
+            _dot = dot;
+            _smoothingFunction = smoothingFunction;
+            PT = DefaultPermutationTable;
         }
 
 
@@ -99,9 +99,9 @@ namespace Noise
         public float Noise(float x, float y = 0.5f, float z = 0.5f)
         {
             //determine what cube we are in
-            int cubeX = ((int)x) & (PT.Length / 2 - 1);
-            int cubeY = ((int)y) & (PT.Length / 2 - 1);
-            int cubeZ = ((int)z) & (PT.Length / 2 - 1);
+            var cubeX = ((int)x) & (PT.Length / 2 - 1);
+            var cubeY = ((int)y) & (PT.Length / 2 - 1);
+            var cubeZ = ((int)z) & (PT.Length / 2 - 1);
 
             /*Find the gradients for the 8 corners of the cube
 
@@ -116,17 +116,17 @@ namespace Noise
 						   \|            \|
 						V000*-------------*V100
 			**/
-            int XIndex = PT[cubeX] + cubeY;
-            int X1Index = PT[cubeX + 1] + cubeY;
+            var xIndex = PT[cubeX] + cubeY;
+            var x1Index = PT[cubeX + 1] + cubeY;
             //indexes for the gradients
-            GradientType V000 = gradients[PT[PT[XIndex] + cubeZ] % gradients.Length];
-            GradientType V001 = gradients[PT[PT[XIndex] + cubeZ + 1] % gradients.Length];
-            GradientType V010 = gradients[PT[PT[XIndex + 1] + cubeZ] % gradients.Length];
-            GradientType V011 = gradients[PT[PT[XIndex + 1] + cubeZ + 1] % gradients.Length];
-            GradientType V100 = gradients[PT[PT[X1Index] + cubeZ] % gradients.Length];
-            GradientType V101 = gradients[PT[PT[X1Index] + cubeZ + 1] % gradients.Length];
-            GradientType V110 = gradients[PT[PT[X1Index + 1] + cubeZ] % gradients.Length];
-            GradientType V111 = gradients[PT[PT[X1Index + 1] + cubeZ + 1] % gradients.Length];
+            var v000 = _gradients[PT[PT[xIndex] + cubeZ] % _gradients.Length];
+            var v001 = _gradients[PT[PT[xIndex] + cubeZ + 1] % _gradients.Length];
+            var v010 = _gradients[PT[PT[xIndex + 1] + cubeZ] % _gradients.Length];
+            var v011 = _gradients[PT[PT[xIndex + 1] + cubeZ + 1] % _gradients.Length];
+            var v100 = _gradients[PT[PT[x1Index] + cubeZ] % _gradients.Length];
+            var v101 = _gradients[PT[PT[x1Index] + cubeZ + 1] % _gradients.Length];
+            var v110 = _gradients[PT[PT[x1Index + 1] + cubeZ] % _gradients.Length];
+            var v111 = _gradients[PT[PT[x1Index + 1] + cubeZ + 1] % _gradients.Length];
 
             //calculate the local x, y and z coordinates (0..1)
             x -= (float)Math.Floor(x);
@@ -134,38 +134,38 @@ namespace Noise
             z -= (float)Math.Floor(z);
 
             //calculate dot products
-            float V000Dot = Dot(V000, x, y, z);
-            float V001Dot = Dot(V001, x, y, z - 1);
-            float V010Dot = Dot(V010, x, y - 1, z);
-            float V011Dot = Dot(V011, x, y - 1, z - 1);
-            float V100Dot = Dot(V100, x - 1, y, z);
-            float V101Dot = Dot(V101, x - 1, y, z - 1);
-            float V110Dot = Dot(V110, x - 1, y - 1, z);
-            float V111Dot = Dot(V111, x - 1, y - 1, z - 1);
+            var v000Dot = _dot(v000, x, y, z);
+            var v001Dot = _dot(v001, x, y, z - 1);
+            var v010Dot = _dot(v010, x, y - 1, z);
+            var v011Dot = _dot(v011, x, y - 1, z - 1);
+            var v100Dot = _dot(v100, x - 1, y, z);
+            var v101Dot = _dot(v101, x - 1, y, z - 1);
+            var v110Dot = _dot(v110, x - 1, y - 1, z);
+            var v111Dot = _dot(v111, x - 1, y - 1, z - 1);
 
             //calculate smoothed x, y and z values. These are used to get
             //a smoother interpolation between the dot products of the 
             //gradients and local coords
-            float smoothedX = SmoothingFunction(x);
-            float smoothedY = SmoothingFunction(y);
-            float smoothedZ = SmoothingFunction(z);
+            var smoothedX = _smoothingFunction(x);
+            var smoothedY = _smoothingFunction(y);
+            var smoothedZ = _smoothingFunction(z);
 
             //linearly interpolate the dot products
-            float V000V100Val = LinearlyInterpolate(V000Dot, V100Dot, smoothedX);
-            float V001V101Val = LinearlyInterpolate(V001Dot, V101Dot, smoothedX);
-            float V010V110Val = LinearlyInterpolate(V010Dot, V110Dot, smoothedX);
-            float V011V111Val = LinearlyInterpolate(V011Dot, V111Dot, smoothedX);
+            var v000V100Val = LinearlyInterpolate(v000Dot, v100Dot, smoothedX);
+            var v001V101Val = LinearlyInterpolate(v001Dot, v101Dot, smoothedX);
+            var v010V110Val = LinearlyInterpolate(v010Dot, v110Dot, smoothedX);
+            var v011V111Val = LinearlyInterpolate(v011Dot, v111Dot, smoothedX);
 
-            float ZZeroPlaneVal = LinearlyInterpolate(V000V100Val, V010V110Val, smoothedY);
-            float ZOnePlaneVal = LinearlyInterpolate(V001V101Val, V011V111Val, smoothedY);
+            var zZeroPlaneVal = LinearlyInterpolate(v000V100Val, v010V110Val, smoothedY);
+            var zOnePlaneVal = LinearlyInterpolate(v001V101Val, v011V111Val, smoothedY);
 
-            return LinearlyInterpolate(ZZeroPlaneVal, ZOnePlaneVal, smoothedZ);
+            return LinearlyInterpolate(zZeroPlaneVal, zOnePlaneVal, smoothedZ);
         }
 
         /// <summary>
         /// Tile Perlin Noise function, the noise is tiled over a region of
         /// tileRegion^3. Creates noise that will seamlessly tile in all
-        /// directions in all dimensions. y, z and tileRedion are optional parameters.
+        /// directions in all dimensions. y, z and tileRegion are optional parameters.
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
@@ -174,42 +174,42 @@ namespace Noise
         /// <returns></returns>
         public float NoiseTiled(float x, float y = 0.5f, float z = 0.5f, int tileRegion = 2)
         {
-            int cubeX = ((int)x) & (PT.Length / 2 - 1);
-            int cubeY = ((int)y) & (PT.Length / 2 - 1);
-            int cubeZ = ((int)z) & (PT.Length / 2 - 1);
-            int XIndex = PT[cubeX % tileRegion] + cubeY % tileRegion;
-            int X1Index = PT[(cubeX + 1) % tileRegion] + cubeY % tileRegion;
-            int XIndex1 = PT[cubeX % tileRegion] + (cubeY + 1) % tileRegion;
-            int X1Index1 = PT[(cubeX + 1) % tileRegion] + (cubeY + 1) % tileRegion;
-            GradientType V000 = gradients[PT[PT[XIndex] + cubeZ % tileRegion] % gradients.Length];
-            GradientType V001 = gradients[PT[PT[XIndex] + (cubeZ + 1) % tileRegion] % gradients.Length];
-            GradientType V010 = gradients[PT[PT[XIndex1] + cubeZ % tileRegion] % gradients.Length];
-            GradientType V011 = gradients[PT[PT[XIndex1] + (cubeZ + 1) % tileRegion] % gradients.Length];
-            GradientType V100 = gradients[PT[PT[X1Index] + cubeZ % tileRegion] % gradients.Length];
-            GradientType V101 = gradients[PT[PT[X1Index] + (cubeZ + 1) % tileRegion] % gradients.Length];
-            GradientType V110 = gradients[PT[PT[X1Index1] + cubeZ % tileRegion] % gradients.Length];
-            GradientType V111 = gradients[PT[PT[X1Index1] + (cubeZ + 1) % tileRegion] % gradients.Length];
+            var cubeX = ((int)x) & (PT.Length / 2 - 1);
+            var cubeY = ((int)y) & (PT.Length / 2 - 1);
+            var cubeZ = ((int)z) & (PT.Length / 2 - 1);
+            var xIndex = PT[cubeX % tileRegion] + cubeY % tileRegion;
+            var x1Index = PT[(cubeX + 1) % tileRegion] + cubeY % tileRegion;
+            var xIndex1 = PT[cubeX % tileRegion] + (cubeY + 1) % tileRegion;
+            var x1Index1 = PT[(cubeX + 1) % tileRegion] + (cubeY + 1) % tileRegion;
+            var v000 = _gradients[PT[PT[xIndex] + cubeZ % tileRegion] % _gradients.Length];
+            var v001 = _gradients[PT[PT[xIndex] + (cubeZ + 1) % tileRegion] % _gradients.Length];
+            var v010 = _gradients[PT[PT[xIndex1] + cubeZ % tileRegion] % _gradients.Length];
+            var v011 = _gradients[PT[PT[xIndex1] + (cubeZ + 1) % tileRegion] % _gradients.Length];
+            var v100 = _gradients[PT[PT[x1Index] + cubeZ % tileRegion] % _gradients.Length];
+            var v101 = _gradients[PT[PT[x1Index] + (cubeZ + 1) % tileRegion] % _gradients.Length];
+            var v110 = _gradients[PT[PT[x1Index1] + cubeZ % tileRegion] % _gradients.Length];
+            var v111 = _gradients[PT[PT[x1Index1] + (cubeZ + 1) % tileRegion] % _gradients.Length];
             x -= (float)Math.Floor(x);
             y -= (float)Math.Floor(y);
             z -= (float)Math.Floor(z);
-            float V000Dot = Dot(V000, x, y, z);
-            float V001Dot = Dot(V001, x, y, z - 1);
-            float V010Dot = Dot(V010, x, y - 1, z);
-            float V011Dot = Dot(V011, x, y - 1, z - 1);
-            float V100Dot = Dot(V100, x - 1, y, z);
-            float V101Dot = Dot(V101, x - 1, y, z - 1);
-            float V110Dot = Dot(V110, x - 1, y - 1, z);
-            float V111Dot = Dot(V111, x - 1, y - 1, z - 1);
-            float smoothedX = SmoothingFunction(x);
-            float smoothedY = SmoothingFunction(y);
-            float smoothedZ = SmoothingFunction(z);
-            float V000V100Val = LinearlyInterpolate(V000Dot, V100Dot, smoothedX);
-            float V001V101Val = LinearlyInterpolate(V001Dot, V101Dot, smoothedX);
-            float V010V110Val = LinearlyInterpolate(V010Dot, V110Dot, smoothedX);
-            float V011V111Val = LinearlyInterpolate(V011Dot, V111Dot, smoothedX);
-            float ZZeroPlaneVal = LinearlyInterpolate(V000V100Val, V010V110Val, smoothedY);
-            float ZOnePlaneVal = LinearlyInterpolate(V001V101Val, V011V111Val, smoothedY);
-            return LinearlyInterpolate(ZZeroPlaneVal, ZOnePlaneVal, smoothedZ);
+            var v000Dot = _dot(v000, x, y, z);
+            var v001Dot = _dot(v001, x, y, z - 1);
+            var v010Dot = _dot(v010, x, y - 1, z);
+            var v011Dot = _dot(v011, x, y - 1, z - 1);
+            var v100Dot = _dot(v100, x - 1, y, z);
+            var v101Dot = _dot(v101, x - 1, y, z - 1);
+            var v110Dot = _dot(v110, x - 1, y - 1, z);
+            var v111Dot = _dot(v111, x - 1, y - 1, z - 1);
+            var smoothedX = _smoothingFunction(x);
+            var smoothedY = _smoothingFunction(y);
+            var smoothedZ = _smoothingFunction(z);
+            var v000V100Val = LinearlyInterpolate(v000Dot, v100Dot, smoothedX);
+            var v001V101Val = LinearlyInterpolate(v001Dot, v101Dot, smoothedX);
+            var v010V110Val = LinearlyInterpolate(v010Dot, v110Dot, smoothedX);
+            var v011V111Val = LinearlyInterpolate(v011Dot, v111Dot, smoothedX);
+            var zZeroPlaneVal = LinearlyInterpolate(v000V100Val, v010V110Val, smoothedY);
+            var zOnePlaneVal = LinearlyInterpolate(v001V101Val, v011V111Val, smoothedY);
+            return LinearlyInterpolate(zZeroPlaneVal, zOnePlaneVal, smoothedZ);
         }
 
         /// <summary>
@@ -234,12 +234,12 @@ namespace Noise
             float lacunarity = 2f,
             float persistence = 0.5f)
         {
-            float noiseValue = 0f;
-            float amp = 1f;
-            float freq = 1f;
-            float totalAmp = 0f;
+            var noiseValue = 0f;
+            var amp = 1f;
+            var freq = 1f;
+            var totalAmp = 0f;
 
-            for (int i = 0; i < numOctaves; i++)
+            for (var i = 0; i < numOctaves; i++)
             {
                 noiseValue += amp * Noise(x * freq, y * freq, z * freq);
                 totalAmp += amp;
@@ -252,7 +252,7 @@ namespace Noise
 
         /// <summary>
         /// Creates tiled noise with multiple octaves. Combines the Octaves and
-        /// Tiled nosise functions to create tilable noise that consists of
+        /// Tiled noise functions to create tileable noise that consists of
         /// multiple octaves.
         /// </summary>
         /// <param name="x"></param>
@@ -272,12 +272,12 @@ namespace Noise
             float lacunarity = 2f,
             float persistence = 0.5f)
         {
-            float noiseValue = 0f;
-            float amp = 1f;
-            float freq = 1f;
-            float totalAmp = 0f;
+            var noiseValue = 0f;
+            var amp = 1f;
+            var freq = 1f;
+            var totalAmp = 0f;
 
-            for (int i = 0; i < numOctaves; i++)
+            for (var i = 0; i < numOctaves; i++)
             {
                 noiseValue += amp * NoiseTiled(x * freq, y * freq, z * freq, tileRegion);
                 totalAmp += amp;
@@ -323,30 +323,32 @@ namespace Noise
 
     public class Perlin : Perlin<Perlin.SimpleVector3>
     {
-        private static readonly SimpleVector3[] gradients = {
-            new SimpleVector3(1,1,0), new SimpleVector3(-1,1,-0), new SimpleVector3(1,-1,0),
-            new SimpleVector3(-1,-1,0), new SimpleVector3(1,0,1), new SimpleVector3(-1,0,1),
-            new SimpleVector3(1,0,-1), new SimpleVector3(-1,0,-1), new SimpleVector3(0,1,1),
-            new SimpleVector3(0,-1,1), new SimpleVector3(0,1,-1), new SimpleVector3(0,-1,-1)};
+        private static readonly SimpleVector3[] Gradients = {
+            new(1,1,0), new(-1,1,-0), new(1,-1,0),
+            new(-1,-1,0), new(1,0,1), new(-1,0,1),
+            new(1,0,-1), new(-1,0,-1), new(0,1,1),
+            new(0,-1,1), new(0,1,-1), new(0,-1,-1)};
 
-        public Perlin(Func<float, float> smoothingFunction) : base(gradients, Dot, smoothingFunction) { }
+        public Perlin(Func<float, float> smoothingFunction) : base(Gradients, Dot, smoothingFunction) { }
 
         public Perlin() : this(SmoothToSCurve) { }
 
         private static float Dot(SimpleVector3 gradient, float x, float y, float z)
         {
-            return gradient.x * x + gradient.y * y + gradient.z * z;
+            return gradient.X * x + gradient.Y * y + gradient.Z * z;
         }
 
         public struct SimpleVector3
         {
-            public float x, y, z;
+            public readonly float X;
+            public readonly float Y;
+            public readonly float Z;
 
             public SimpleVector3(float x, float y, float z)
             {
-                this.x = x;
-                this.y = y;
-                this.z = z;
+                X = x;
+                Y = y;
+                Z = z;
             }
         }
     }
