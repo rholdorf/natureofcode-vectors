@@ -28,11 +28,8 @@ namespace WhatIsAVector
             var mouse = new Vector2(mouseState.X, mouseState.Y);
             _acceleration = mouse - _position;
             _acceleration.SetMagnitude(1f);
-
             _velocity += _acceleration;
-
             _position += _velocity;
-
         }
 
         public void Draw(SpriteBatch spriteBatch)

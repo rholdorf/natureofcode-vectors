@@ -14,18 +14,10 @@ namespace WhatIsAVector
         /// <returns>Clamped value.</returns>
         public static float Clamp(ref this float value, float low, float high)
         {
-            if (value < low)
-            {
-                value = low;
-                return low;
-            }
-
-            if (value > high)
-            {
-                value = high;
+            if (value.Equals(high))
                 return high;
-            }
-
+            
+            value = value < low ? low : high;
             return value;
         }
 
@@ -43,9 +35,8 @@ namespace WhatIsAVector
             var a = n - start1;
             var b = stop1 - start1;
             var c = stop2 - start2;
-            var d = start2;
 
-            var ret = (a / b * c) + d;
+            var ret = (a / b * c) + start2;
             if (!withinBounds)
                 return ret;
 

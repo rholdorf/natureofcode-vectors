@@ -7,6 +7,7 @@ namespace WhatIsAVector
 {
     public static class Primitives2D
     {
+        private const double MAX = 2.0 * Math.PI;
         private static readonly Dictionary<string, List<Vector2>> circleCache = new();
         private static Texture2D pixel;
 
@@ -29,10 +30,8 @@ namespace WhatIsAVector
             if (points.Count < 2)
                 return;
 
-            for (int i = 1; i < points.Count; i++)
-            {
+            for (var i = 1; i < points.Count; i++)
                 DrawLine(spriteBatch, points[i - 1] + position, points[i] + position, color, thickness);
-            }
         }
 
         /// <summary>
@@ -45,27 +44,19 @@ namespace WhatIsAVector
         {
             // Look for a cached version of this circle
             var circleKey = radius + "x" + sides;
-            if (circleCache.ContainsKey(circleKey))
-            {
-                return circleCache[circleKey];
-            }
-
+            if (circleCache.TryGetValue(circleKey, out var circle))
+                return circle;
+ 
             List<Vector2> vectors = new();
-
-            const double max = 2.0 * Math.PI;
-            double step = max / sides;
-
-            for (double theta = 0.0; theta < max; theta += step)
-            {
+            var step = MAX / sides;
+            for (var theta = 0.0; theta < MAX; theta += step)
                 vectors.Add(new Vector2((float)(radius * Math.Cos(theta)), (float)(radius * Math.Sin(theta))));
-            }
 
             // then add the first vector again so it's a complete loop
-            vectors.Add(new Vector2((float)(radius * Math.Cos(0)), (float)(radius * Math.Sin(0))));
+            vectors.Add(new Vector2((float)radius, 0));
 
             // Cache this circle so that it can be quickly drawn next time
             circleCache.Add(circleKey, vectors);
-
             return vectors;
         }
 
@@ -200,19 +191,8 @@ namespace WhatIsAVector
         /// <param name="spriteBatch">The destination drawing surface</param>
         /// <param name="rect">The rectangle to draw</param>
         /// <param name="color">The color to draw the rectangle in</param>
-        public static void DrawRectangle(this SpriteBatch spriteBatch, Rectangle rect, Color color)
-        {
-            DrawRectangle(spriteBatch, rect, color, 1.0f);
-        }
-
-        /// <summary>
-        /// Draws a rectangle with the thickness provided
-        /// </summary>
-        /// <param name="spriteBatch">The destination drawing surface</param>
-        /// <param name="rect">The rectangle to draw</param>
-        /// <param name="color">The color to draw the rectangle in</param>
         /// <param name="thickness">The thickness of the lines</param>
-        public static void DrawRectangle(this SpriteBatch spriteBatch, Rectangle rect, Color color, float thickness)
+        public static void DrawRectangle(this SpriteBatch spriteBatch, Rectangle rect, Color color, float thickness = 1.0f)
         {
 
             // TODO: Handle rotations
@@ -301,10 +281,10 @@ namespace WhatIsAVector
         public static void DrawLine(this SpriteBatch spriteBatch, Vector2 point1, Vector2 point2, Color color, float thickness)
         {
             // calculate the distance between the two vectors
-            float distance = Vector2.Distance(point1, point2);
+            var distance = Vector2.Distance(point1, point2);
 
             // calculate the angle between the two vectors
-            float angle = (float)Math.Atan2(point2.Y - point1.Y, point2.X - point1.X);
+            var angle = (float)Math.Atan2(point2.Y - point1.Y, point2.X - point1.X);
 
             spriteBatch.Draw(pixel,
                              point1,
@@ -447,7 +427,7 @@ namespace WhatIsAVector
         /// <param name="thickness">The thickness of the arc</param>
         public static void DrawArc(this SpriteBatch spriteBatch, Vector2 center, float radius, int sides, float startingAngle, float radians, Color color, float thickness)
         {
-            List<Vector2> arc = CreateArc(radius, sides, startingAngle, radians);
+            var arc = CreateArc(radius, sides, startingAngle, radians);
             DrawPoints(spriteBatch, center, arc, color, thickness);
         }
     }
