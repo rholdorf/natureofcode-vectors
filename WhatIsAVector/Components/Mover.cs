@@ -19,7 +19,6 @@ namespace WhatIsAVector.Components
         protected readonly float _screenHeight;
         protected SpriteBatch _spriteBatch;
         protected float _radius;
-        private Game _game;
         protected float _mass;
         protected bool _destroyed;
 
@@ -33,14 +32,13 @@ namespace WhatIsAVector.Components
             float screenHeight)
             : base(game)
         {
-            _game = game;
             _color = color;
             _position = position;
             _radius = radius;
             _mass = mass;
             _screenWidth = screenWidth;
             _screenHeight = screenHeight;
-            _spriteBatch = new SpriteBatch(_game.GraphicsDevice);
+            _spriteBatch = new SpriteBatch(game.GraphicsDevice);
         }
 
         public Vector2 Position { get { return _position; } }
@@ -95,7 +93,6 @@ namespace WhatIsAVector.Components
             {
                 _spriteBatch?.Dispose();
                 _spriteBatch = null;
-                _game = null;
                 _disposed = true;
             }
 

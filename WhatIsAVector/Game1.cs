@@ -12,7 +12,9 @@ namespace WhatIsAVector
     {
         private bool _disposed;
         private GraphicsDeviceManager _graphics;
+
         private SpriteBatch _spriteBatch;
+
         //private RenderTarget2D _screenBuffer;
         private Matrix _translationMatrix;
         private const int WIDTH = 800;
@@ -80,6 +82,7 @@ namespace WhatIsAVector
         /// represent an objects orientation.
         /// </summary>
         private Matrix _worldMatrix;
+
         private Model _model;
         private bool _cameraOrbiting = true;
         private readonly Matrix _rotationMatrix = Matrix.CreateRotationY(MathHelper.ToRadians(1f));
@@ -104,25 +107,35 @@ namespace WhatIsAVector
 
             Primitives2D.Initialize(GraphicsDevice);
 
-            Components.Add(new CreateTexture2DPerlinNoise(this, new Vector2(0, 0), Color.White, WIDTH / 2, HEIGHT / 2, _perlin));
-            Components.Add(new CreateTexture2DOpenSimplexNoise(this, new Vector2(WIDTH / 2, 0), Color.White, WIDTH / 2, HEIGHT / 2, _noise));
+            //Components.Add(new CreateTexture2DPerlinNoise(this, new Vector2(0, 0), Color.White, WIDTH / 2, HEIGHT / 2, _perlin));
+            //Components.Add(new CreateTexture2DOpenSimplexNoise(this, new Vector2(WIDTH / 2, 0), Color.White, WIDTH / 2, HEIGHT / 2, _noise));
+           
+            // for (int i = 2; i < 20; i++)
+            // {
+            //     Components.Add(new MovingCircle1DPerlinNoise(this, Color.White, new Vector2(WIDTH / 2, HEIGHT / 2), i, 1, WIDTH, HEIGHT, _perlin, _random));
+            // }
+            
+            //Components.Add(new MovingCircle1DOpenSimplexNoise(this, Color.Yellow, new Vector2(WIDTH / 2, HEIGHT / 2), 20f, 1, WIDTH, HEIGHT, _noise, _random));
+            // for (int i = 2; i < 20; i++)
+            // {
+            //     Components.Add(new MovingCircle1DOpenSimplexNoise(this, Color.Green, new Vector2(WIDTH / 2, HEIGHT / 2), i, 1, WIDTH, HEIGHT, _noise, _random));
+            // }
 
-            Components.Add(new MovingCircle1DPerlinNoise(this, Color.White, new Vector2(WIDTH / 2, HEIGHT / 2), 20f, 1, WIDTH, HEIGHT, _perlin, _random));
-            Components.Add(new MovingCircle1DOpenSimplexNoise(this, Color.Yellow, new Vector2(WIDTH / 2, HEIGHT / 2), 20f, 1, WIDTH, HEIGHT, _noise, _random));
-
-            Components.Add(new RollingGraph1DPerlinNoise(this, Color.Red, WIDTH, HEIGHT, _perlin));
-            Components.Add(new RollingGraph1DOpenSimplexNoise(this, Color.Yellow, WIDTH, HEIGHT, _noise));
-
-            //AddBouncingBalls(5);
-            //AddBallDrag(5);
-
-            //AddAttractor(50);
+            // Components.Add(new RollingGraph1DPerlinNoise(this, Color.Red, WIDTH, HEIGHT, _perlin));
+            // Components.Add(new RollingGraph1DOpenSimplexNoise(this, Color.Yellow, WIDTH, HEIGHT, _noise));
+            //
+            // AddBouncingBalls(5);
+            // AddBallDrag(5);
+            //
+            // AddAttractor(50);
             //AddAttractorTriangle(10);
 
             //Components.Add(new SpinningRectangle(this, Color.White, new Rectangle(0, 0, 128, 64), WIDTH, HEIGHT));
 
             //Components.Add(new Wave(game: this, amplitude: 50, period: 300, phase: 10, screenWidth: WIDTH, screenHeight: HEIGHT, color: Color.White));
             //Components.Add(new Pendulum(this, Color.White, new Vector2(WIDTH / 4 * 3, HEIGHT / 2), WIDTH, HEIGHT));
+            
+            Components.Add(new WatercolorBlotch(this, Color.Green, new Vector2(WIDTH / 4 * 3, HEIGHT / 2)));
 
             Components.Add(new FpsCounter(this, _hudFont, new Vector2(5, 5), Color.Yellow));
             _translationMatrix = Matrix.CreateTranslation(WIDTH / 2f, HEIGHT / 2f, 0f);
@@ -131,11 +144,11 @@ namespace WhatIsAVector
             _camTarget = new Vector3(0f, 0f, 0f);
             _camPosition = new Vector3(0f, 0f, -5);
             _projectionMatrix = Matrix.CreatePerspectiveFieldOfView(
-                MathHelper.ToRadians(_fieldOfViewDegrees), 
-                _graphics.GraphicsDevice.Viewport.AspectRatio, 
-                1f, 
+                MathHelper.ToRadians(_fieldOfViewDegrees),
+                _graphics.GraphicsDevice.Viewport.AspectRatio,
+                1f,
                 1000f);
-            _viewMatrix = Matrix.CreateLookAt(_camPosition, _camTarget, new Vector3(0f, 1f, 0f));// Y up
+            _viewMatrix = Matrix.CreateLookAt(_camPosition, _camTarget, new Vector3(0f, 1f, 0f)); // Y up
             _worldMatrix = Matrix.CreateWorld(_camTarget, Vector3.Forward, Vector3.Up);
             _model = Content.Load<Model>("MonoCube/MonoCube");
 
@@ -242,7 +255,7 @@ namespace WhatIsAVector
             {
                 if (keyboardState.IsKeyDown(Keys.Escape))
                     Exit();
-                
+
                 if (keyboardState.IsKeyDown(Keys.Left))
                 {
                     _camPosition.X -= 0.1f;
@@ -288,22 +301,23 @@ namespace WhatIsAVector
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(_backgroundColor);
-            
+
             // Draw the 3d model
-            for(var i=0; i<_model.Meshes.Count; i++)
-            {
-                var mesh = _model.Meshes[i];
-                for (var j = 0; j< mesh.Effects.Count; j++)
-                {
-                    var effect = (BasicEffect)mesh.Effects[j];
-                    effect.EnableDefaultLighting();
-                    effect.AmbientLightColor = new Vector3(0f, 0f, 1f);
-                    effect.View = _viewMatrix;
-                    effect.World = _worldMatrix;
-                    effect.Projection = _projectionMatrix;
-                }
-                mesh.Draw();
-            }
+            // for (var i = 0; i < _model.Meshes.Count; i++)
+            // {
+            //     var mesh = _model.Meshes[i];
+            //     for (var j = 0; j < mesh.Effects.Count; j++)
+            //     {
+            //         var effect = (BasicEffect)mesh.Effects[j];
+            //         effect.EnableDefaultLighting();
+            //         effect.AmbientLightColor = new Vector3(0f, 0f, 1f);
+            //         effect.View = _viewMatrix;
+            //         effect.World = _worldMatrix;
+            //         effect.Projection = _projectionMatrix;
+            //     }
+            //
+            //     mesh.Draw();
+            // }
 
             base.Draw(gameTime);
         }

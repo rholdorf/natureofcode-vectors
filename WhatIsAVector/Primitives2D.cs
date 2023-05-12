@@ -25,6 +25,7 @@ namespace WhatIsAVector
         /// <param name="points">The points to connect with lines</param>
         /// <param name="color">The color to use</param>
         /// <param name="thickness">The thickness of the lines</param>
+        /// </summary>
         public static void DrawPoints(this SpriteBatch spriteBatch, Vector2 position, List<Vector2> points, Color color, float thickness)
         {
             if (points.Count < 2)
@@ -40,7 +41,7 @@ namespace WhatIsAVector
         /// <param name="radius">The radius of the circle</param>
         /// <param name="sides">The number of sides to generate</param>
         /// <returns>A list of vectors that, if connected, will create a circle</returns>
-        private static List<Vector2> CreateCircle(double radius, int sides)
+        public static List<Vector2> CreateCircle(double radius, int sides)
         {
             // Look for a cached version of this circle
             var circleKey = radius + "x" + sides;
