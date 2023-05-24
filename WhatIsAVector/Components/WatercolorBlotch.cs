@@ -28,15 +28,14 @@ public class WatercolorBlotch : DrawableGameComponent
         _polygon = Primitives2D.CreateCircle(20, 8);
     }
     
-    public override void Update(GameTime gameTime)
-    {
-
-        base.Update(gameTime);
-    }
+    // public override void Update(GameTime gameTime)
+    // {
+    //     base.Update(gameTime);
+    // }
 
     public override void Draw(GameTime gameTime)
     {
-        _spriteBatch.Begin();
+        _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
         _spriteBatch.DrawPoints(_position, _polygon, _color, 1f);
         _spriteBatch.End();
 

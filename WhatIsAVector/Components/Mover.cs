@@ -74,7 +74,7 @@ namespace WhatIsAVector.Components
 
         public override void Draw(GameTime gameTime)
         {
-            _spriteBatch.Begin();
+            _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
             _spriteBatch.DrawCircle(_position, _radius, (int)_radius, _color);
             _spriteBatch.End();
 

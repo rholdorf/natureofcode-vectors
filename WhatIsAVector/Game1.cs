@@ -25,7 +25,7 @@ namespace WhatIsAVector
         private readonly Perlin _perlin = new();
         private readonly Random _random = new();
         private readonly OpenSimplex2F _noise = new(1);
-        private Color _backgroundColor = new Color(0, 0, 0, 10);
+        private Color _backgroundColor = new Color(30, 30, 30, 255);
         private Vector3 _camTarget;
         private Vector3 _camPosition;
 
@@ -116,10 +116,9 @@ namespace WhatIsAVector
                 Components.Add(new MovingCircle1DPerlinNoise(this, new Color(255,255,255,126), new Vector2(WIDTH / 2, HEIGHT / 2), i, 1, WIDTH, HEIGHT, _perlin, _random));
             }
             
-            Components.Add(new MovingCircle1DOpenSimplexNoise(this, Color.Yellow, new Vector2(WIDTH / 2, HEIGHT / 2), 20f, 1, WIDTH, HEIGHT, _noise, _random));
             for (int i = 2; i < 20; i++)
             {
-                Components.Add(new MovingCircle1DOpenSimplexNoise(this, Color.Green, new Vector2(WIDTH / 2, HEIGHT / 2), i, 1, WIDTH, HEIGHT, _noise, _random));
+                Components.Add(new MovingCircle1DOpenSimplexNoise(this, new Color(0,255,0,126), new Vector2(WIDTH / 2, HEIGHT / 2), i, 1, WIDTH, HEIGHT, _noise, _random));
             }
 
             // Components.Add(new RollingGraph1DPerlinNoise(this, Color.Red, WIDTH, HEIGHT, _perlin));
@@ -136,7 +135,7 @@ namespace WhatIsAVector
             //Components.Add(new Wave(game: this, amplitude: 50, period: 300, phase: 10, screenWidth: WIDTH, screenHeight: HEIGHT, color: Color.White));
             //Components.Add(new Pendulum(this, Color.White, new Vector2(WIDTH / 4 * 3, HEIGHT / 2), WIDTH, HEIGHT));
             
-            Components.Add(new WatercolorBlotch(this, Color.Green, new Vector2(WIDTH / 4 * 3, HEIGHT / 2)));
+            Components.Add(new WatercolorBlotch(this, new Color(0,255,0,126), new Vector2(WIDTH / 4 * 3, HEIGHT / 2)));
 
             Components.Add(new FpsCounter(this, _hudFont, new Vector2(5, 5), Color.Yellow));
             _translationMatrix = Matrix.CreateTranslation(WIDTH / 2f, HEIGHT / 2f, 0f);
