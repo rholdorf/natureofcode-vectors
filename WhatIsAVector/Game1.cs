@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Noise;
 using WhatIsAVector.Components;
+using WhatIsAVector.Noise;
 
 namespace WhatIsAVector
 {
@@ -110,16 +111,16 @@ namespace WhatIsAVector
             //Components.Add(new CreateTexture2DPerlinNoise(this, new Vector2(0, 0), Color.White, WIDTH / 2, HEIGHT / 2, _perlin));
             //Components.Add(new CreateTexture2DOpenSimplexNoise(this, new Vector2(WIDTH / 2, 0), Color.White, WIDTH / 2, HEIGHT / 2, _noise));
            
-            // for (int i = 2; i < 20; i++)
-            // {
-            //     Components.Add(new MovingCircle1DPerlinNoise(this, Color.White, new Vector2(WIDTH / 2, HEIGHT / 2), i, 1, WIDTH, HEIGHT, _perlin, _random));
-            // }
+            for (int i = 2; i < 20; i++)
+            {
+                Components.Add(new MovingCircle1DPerlinNoise(this, new Color(255,255,255,126), new Vector2(WIDTH / 2, HEIGHT / 2), i, 1, WIDTH, HEIGHT, _perlin, _random));
+            }
             
-            //Components.Add(new MovingCircle1DOpenSimplexNoise(this, Color.Yellow, new Vector2(WIDTH / 2, HEIGHT / 2), 20f, 1, WIDTH, HEIGHT, _noise, _random));
-            // for (int i = 2; i < 20; i++)
-            // {
-            //     Components.Add(new MovingCircle1DOpenSimplexNoise(this, Color.Green, new Vector2(WIDTH / 2, HEIGHT / 2), i, 1, WIDTH, HEIGHT, _noise, _random));
-            // }
+            Components.Add(new MovingCircle1DOpenSimplexNoise(this, Color.Yellow, new Vector2(WIDTH / 2, HEIGHT / 2), 20f, 1, WIDTH, HEIGHT, _noise, _random));
+            for (int i = 2; i < 20; i++)
+            {
+                Components.Add(new MovingCircle1DOpenSimplexNoise(this, Color.Green, new Vector2(WIDTH / 2, HEIGHT / 2), i, 1, WIDTH, HEIGHT, _noise, _random));
+            }
 
             // Components.Add(new RollingGraph1DPerlinNoise(this, Color.Red, WIDTH, HEIGHT, _perlin));
             // Components.Add(new RollingGraph1DOpenSimplexNoise(this, Color.Yellow, WIDTH, HEIGHT, _noise));

@@ -1,5 +1,6 @@
 using BenchmarkDotNet.Attributes;
 using Noise;
+using WhatIsAVector.Noise;
 
 namespace Benchmark;
 
