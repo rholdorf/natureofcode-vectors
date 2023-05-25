@@ -14,7 +14,8 @@ namespace WhatIsAVector.Components
         private readonly Perlin _noise;
         private readonly float _inc = 0.01f;
         private Texture2D _texture;
-        private float zoff = 0f;
+        private float _zoff = 0f;
+        private byte[] _colorData;
 
         public CreateTexture2DPerlinNoise(
             Game game,
@@ -31,6 +32,7 @@ namespace WhatIsAVector.Components
             _noise = noise;
             _spriteBatch = new SpriteBatch(_game.GraphicsDevice);
             _texture = new Texture2D(GraphicsDevice, width, height);
+            _colorData = new byte[width * height * 4];
             FillTexture();
         }
 
@@ -38,24 +40,24 @@ namespace WhatIsAVector.Components
         {
             var yoff = 0f;
             var index = 0;
-            var colorData = new byte[_texture.Width * _texture.Height * 4];
+            
             for (int y = 0; y < _texture.Height; y++)
             {
                 var xoff = 0f;
                 for (int x = 0; x < _texture.Width; x++)
                 {
-                    var r = _noise.NoiseByte(xoff, yoff, zoff);
-                    colorData[index++] = r; // red
-                    colorData[index++] = r; // green
-                    colorData[index++] = r; // blue
-                    colorData[index++] = 255; // alpha
+                    var r = _noise.NoiseByte(xoff, yoff, _zoff);
+                    _colorData[index++] = r; // red
+                    _colorData[index++] = r; // green
+                    _colorData[index++] = r; // blue
+                    _colorData[index++] = 255; // alpha
                     xoff += _inc;
                 }
                 yoff += _inc;
             }
 
-            zoff += _inc;
-            _texture.SetData(colorData);
+            _zoff += _inc;
+            _texture.SetData(_colorData);
         }
 
         public override void Draw(GameTime gameTime)
